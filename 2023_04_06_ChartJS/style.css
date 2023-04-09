@@ -1,0 +1,12 @@
+
+.container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.chartDiv {
+    position: relative;
+    height: 300px;
+    width: 30%;
+}

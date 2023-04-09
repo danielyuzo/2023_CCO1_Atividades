@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChartJS</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="chartDiv">
+            <canvas id="lineChart"></canvas>
+        </div>
+        <div class="chartDiv">
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    const lineLabels = [
+        '12:00',
+        '13:00',
+        '14:00',
+        '15:00', 
+        '16:00', 
+        '17:00',
+    ];
+
+    const lineData = {
+        labels: lineLabels,
+        datasets: [{
+            label: 'Temperatura',
+            backgroundColor: 'rgb(255,99,132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [30,29,28,25,22,23],
+        },
+        {
+            label: 'Umidade',
+            backgroundColor: 'rgb(100,150,255)',
+            borderColor: 'rgb(100, 150, 255)',
+            data: [80,82,80,85,80,83],
+        }]
+    };
+
+    const lineConfig = {
+        type: 'line',
+        data: lineData,
+        options: {}
+    };
+
+    const barLabels = [
+        'Janeiro',
+        'Fevereiro',
+        'Março',
+        'Abril', 
+        'Maio', 
+        'Junho',
+    ];
+
+    const barData = {
+        labels: barLabels,
+        datasets: [{
+            label: 'Temperatura Média',
+            backgroundColor: 'rgb(255,99,132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [22,24,27,23,20,18],
+        },
+        {
+            label: 'Umidade Média',
+            backgroundColor: 'rgb(100,150,255)',
+            borderColor: 'rgb(100, 150, 255)',
+            data: [90,89,93,87,88,82],
+        }]
+    };
+
+    const barConfig = {
+        type: 'bar',
+        data: barData,
+        options: {}
+    };
+
+</script>
+
+<script>
+    const lineChart = new Chart(
+        document.getElementById('lineChart'),
+        lineConfig
+    )
+    const barChart = new Chart(
+        document.getElementById('barChart'),
+        barConfig
+    );
+</script>
