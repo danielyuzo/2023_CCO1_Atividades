@@ -16,6 +16,8 @@ connection.connect();
 
 const servidor = () => {
     const app = express();
+    app.use(express.json());
+    app.use(express.urlencoded());
     app.use((request, response, next) => {
         response.header('Access-Control-Allow-Origin', '*');
         response.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept');
@@ -27,12 +29,16 @@ const servidor = () => {
     app.get('/usuarios', (_, response) => {
         connection.query('SELECT * FROM usuario', (err, rows, fields) => {
             if (err) { throw err; }
-            return response.json(rows);
+            return response.json(rows);d
         });
     });
 
-    app.post('/usuarios',(_, response) => {
-        connection.execute("INSERT INTO usuario VALUES (null, 'batata', 'dcheiwndjnjbasda', 'batata@hotmail.com', '2023-04-25 13:30:00', null, false);");
+    app.post('/usuarios',(request, response) => {
+        var now = new Date();
+        var dataHora = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()} ${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
+
+        connection.execute("INSERT INTO usuario VALUES (null, ?, ?, ?);", [request.body.nome, request.body.email, dataHora]);
+        response.send('batata');
     });
 }
 
