@@ -10,7 +10,23 @@
     <form method="POST" action="http://localhost:3000/usuarios">
         Nome: <input name="nome" id="nome">
         Email<input name="email" id="email">
-        <input type="submit">
+        <input type="submit" value="Inserir">
     </form>
+
+    
+        ID: <input name="id" id="id">
+        <button onclick="deletar()">Deletar</button>
+    
+
+    <div id="divLista"></div>
 </body>
 </html>
+
+<script>
+    function deletar() {
+        var idUser = id.value;
+        fetch('http://localhost:3000/usuarios/' + idUser, {
+            method: 'DELETE'
+        });
+    }
+</script>
