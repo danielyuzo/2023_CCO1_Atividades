@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="lista" id="divLista">
+
+    </div>
+</body>
+</html>
+
+<script>
+    function listarPostagens() {
+        var params = new URLSearchParams(location.search);
+        alert(params.get("id"));
+        var http = new XMLHttpRequest();
+        http.open('GET', 'http://localhost:3000/posts/' + params.get("id"), false);
+        http.send(null);
+        var lista = JSON.parse(http.responseText);
+        divLista.innerHTML = `<div><h3>${lista[0].titulo}<br>
+                    <p>${lista[0].textoPost}</p><br>
+                    Criado em: ${lista[0].dataCriacao} por ${lista[0].fkUsuario}<br><br>`;
+        for (var i = 0; i < lista.length; i++) {
+            divLista.innerHTML += `<div><p>${lista[i].textoComentario}</p><br>
+                    Criado em: ${lista[i].dataCriacao} por ${lista[i].fkUsuario}<br><br>`;
+        }
+    }
+
+    listarPostagens();
+</script>
