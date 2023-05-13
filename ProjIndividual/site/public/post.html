@@ -21,7 +21,7 @@
         http.open('GET', 'http://localhost:3000/posts/' + params.get("id"), false);
         http.send(null);
         var lista = JSON.parse(http.responseText);
-        divLista.innerHTML = `<div><h3>${lista[0].titulo}<br>
+        divLista.innerHTML = `<div><h3>${lista[0].titulo}</h3><br>
                     <p>${lista[0].textoPost}</p><br>
                     Criado em: ${lista[0].dataCriacao} por ${lista[0].fkUsuario}<br><br>`;
         for (var i = 0; i < lista.length; i++) {
@@ -32,3 +32,10 @@
 
     listarPostagens();
 </script>
+
+
+12345');
+
+DROP TABLE usuario;
+
+SELECT * FROM usuario WHERE (id = '1
