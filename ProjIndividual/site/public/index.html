@@ -1,32 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/lista.css">
     <title>Document</title>
 </head>
+
 <body>
-    <form method="POST" action="http://localhost:3000/usuarios">
-        Nome: <input name="nome" id="nome">
-        Email<input name="email" id="email">
-        <input type="submit" value="Inserir">
-    </form>
+    <!-- Header -->
+    <div>
+        <ul>
+            <li>Home</li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="cadastro.html">Cadastro</a></li>
+            <li><a href="busca.html">Busca</a></li>
+        </ul>
+    </div>
 
-    
-        ID: <input name="id" id="id">
-        <button onclick="deletar()">Deletar</button>
-    
+    <div id="divLista" class="lista"></div>
 
-    <div id="divLista"></div>
+    <div id="divPost"></div>
 </body>
+
 </html>
 
 <script>
-    function deletar() {
-        var idUser = id.value;
-        fetch('http://localhost:3000/usuarios/' + idUser, {
-            method: 'DELETE'
+    function atualizarLista() {
+        fetch("/post/listar", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function (resposta) {
+
+            console.log("resposta: ", resposta);
+
+            if (resposta.ok) {
+                divLista.innerHTML = '';
+                resposta.json().then(dados => {
+                    console.log(dados)
+                    for (var i = 0; i < dados.length; i++) {
+                        divLista.innerHTML += `<div class="post" onclick="selecionarPost(${dados[i].idPost})">
+                                <h3>${dados[i].titulo}</h3>
+                                <p>${dados[i].textoPost}</p>
+                                <span>Criado em: ${(new Date(dados[i].dataCriacao)).toDateString()} por ${dados[i].fkUsuario}</span>
+                            </div>`;
+                    }
+                });
+        } else {
+                throw ("Houve um erro ao obter as postagens!");
+            }
+        }).catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
         });
     }
+
+    function selecionarPost(idPost) {
+        divLista.style.display = 'none';
+        divPost.style.display = 'flex';
+        fetch("/post/visualizar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify ({
+                idPostServer: idPost
+            })
+        }).then(function (resposta) {
+
+            console.log("resposta: ", resposta);
+
+            if (resposta.ok) {
+                divPost.innerHTML = '';
+                resposta.json().then(dados => {
+                    divPost.innerHTML = '';
+                    var texto = `<div class="post">
+                                <h3><span class="botao" onclick="voltar()">&lt;</span>${dados[0].titulo}</h3>
+                                <p>${dados[0].textoPost}</p>
+                                <span>Criado em: ${new Date(dados[0].dataCriacao).toDateString()} por ${dados[0].fkUsuario}</span>`
+
+                    for (var i = 0; i < dados.length; i++) {
+                        texto += `<div class="comentario">
+                                <p>${dados[i].textoComentario}</p>
+                                <span>Criado em: ${new Date(dados[i].dataCriacao).toDateString()} por ${dados[i].fkUsuario}</span>
+                            </div>`;
+                    }
+
+                    divPost.innerHTML = texto;
+                });
+        } else {
+                throw ("Houve um erro ao obter as postagens!");
+            }
+        }).catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+        });
+    }
+
+    function voltar() {
+        divPost.style.display = 'none';
+        divLista.style.display = 'flex';
+        atualizarLista();
+    }
+
+    atualizarLista();
+
 </script>
