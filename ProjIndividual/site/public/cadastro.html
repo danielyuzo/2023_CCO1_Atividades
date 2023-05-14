@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- Header -->
+    <div>
+        <ul>
+            <li>Home</li>
+            <li><a href="index.html">Login</a></li>
+            <li>Cadastro</li>
+            <li><a href="busca.html">Busca</a></li>
+        </ul>
+    </div>
+
+    <div class="formCadastro">
+        Nome de usuário:
+        <input id="inpNome">
+        E-mail:
+        <input id="inpEmail">
+        Senha:
+        <input id="inpSenha1" type="password">
+        Digite a senha novamente:
+        <input id="inpSenha2" type="password">
+        <button onclick="validarEntradas()">Cadastrar</button>
+
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    function validarEntradas() {
+        var nome = inpNome.value;
+        var email = inpEmail.value;
+        var senha1 = inpSenha1.value;
+        var senha2 = inpSenha2.value;
+        var validado = true;
+
+        if (nome.length < 4) {
+            inpNome.style.border = '1px solid red';
+            validado = false;
+        } else {
+            inpNome.style.border = '1px solid black';
+        }
+
+        if (email.length < 10 || email.includes('@') == false || email.includes('.') == false) {
+            inpEmail.style.border = '1px solid red';
+            validado = false;
+        } else {
+            inpEmail.style.border = '1px solid black';
+        }
+        alert(senha1.search(/[a-z]+/));
+        alert(senha1.search(/[A-Z]+/));
+        alert(senha1.search(/[0-9]+/));
+
+        if (senha1.length < 6 || senha1.search(/[a-z]+/) == -1 || senha1.search(/[A-Z]+/) == -1 || senha1.search(/[0-9]+/) == -1 || senha1 != senha2) {
+            inpSenha1.style.border = '1px solid red';
+            inpSenha2.style.border = '1px solid red';
+            validado = false;
+        } else {
+            inpSenha1.style.border = '1px solid black';
+            inpSenha2.style.border = '1px solid black';
+        }
+
+        if (validado) {
+            fetch("/usuarios/cadastrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nomeServer: nome,
+                    emailServer: email,
+                    senhaServer: senha1
+                })
+            }).then(function (resposta) {
+
+                console.log("resposta: ", resposta);
+
+                if (resposta.ok) {
+                    // cardErro.style.display = "block";
+                    setTimeout(() => {
+                        window.location = "login.html";
+                    }, "2000")
+                } else {
+                    throw ("Houve um erro ao cadastrar o usuário!");
+                }
+            }).catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+        }
+    }
+</script>

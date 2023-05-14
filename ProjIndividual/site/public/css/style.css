@@ -1,0 +1,12 @@
+
+.formCadastro {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    border: 1px solid black;
+    width: 40%;
+}
+
+.formCadastro input {
+    border: 1px solid black;
+}
