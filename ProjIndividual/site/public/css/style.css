@@ -10,3 +10,13 @@
 .formCadastro input {
     border: 1px solid black;
 }
+
+.loginCard {
+    display: none;
+    flex-direction: column;
+    width: 20%;
+    height: 20%;
+    position: fixed;
+    right: 20px;
+    top: 20px;
+}

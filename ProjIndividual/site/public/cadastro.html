@@ -13,8 +13,8 @@
     <!-- Header -->
     <div>
         <ul>
-            <li>Home</li>
-            <li><a href="index.html">Login</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="login.html">Login</a></li>
             <li>Cadastro</li>
             <li><a href="busca.html">Busca</a></li>
         </ul>
@@ -30,7 +30,6 @@
         Digite a senha novamente:
         <input id="inpSenha2" type="password">
         <button onclick="validarEntradas()">Cadastrar</button>
-
     </div>
 
 </body>
@@ -58,9 +57,6 @@
         } else {
             inpEmail.style.border = '1px solid black';
         }
-        alert(senha1.search(/[a-z]+/));
-        alert(senha1.search(/[A-Z]+/));
-        alert(senha1.search(/[0-9]+/));
 
         if (senha1.length < 6 || senha1.search(/[a-z]+/) == -1 || senha1.search(/[A-Z]+/) == -1 || senha1.search(/[0-9]+/) == -1 || senha1 != senha2) {
             inpSenha1.style.border = '1px solid red';

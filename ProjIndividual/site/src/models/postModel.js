@@ -3,7 +3,8 @@ var database = require("../database/config")
 function listar() {
     console.log("ACESSEI O POST MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar()");
     var instrucao = `
-        SELECT * FROM post ORDER BY dataCriacao DESC;
+        SELECT p.idPost, p.titulo, p.textoPost, p.dataCriacao, p.dataEdicao, u.username 
+            FROM post AS p JOIN usuario AS u ON p.fkUsuario = u.idUsuario ORDER BY dataCriacao DESC, idPost DESC;
     `;
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);
@@ -11,8 +12,15 @@ function listar() {
 
 function visualizar(idPost) {
     console.log("ACESSEI O POST MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar()");
+    // var instrucao = `
+        // SELECT * FROM post JOIN comentario ON fkPost = idPost JOIN usuario ON  WHERE idPost = ${idPost};
+    // `;
     var instrucao = `
-        SELECT * FROM post JOIN comentario ON fkPost = idPost WHERE idPost = ${idPost};
+        SELECT p.idPost, p.titulo, p.textoPost, p.dataCriacao AS criacaoPost, p.dataEdicao AS edicaoPost, uP.username AS poster, 
+               c.textoComentario, c.dataCriacao AS criacaoComent, c.dataEdicao AS edicaoComent, uC.username AS commenter
+        FROM post AS p JOIN usuario AS uP ON p.fkUsuario = uP.idUsuario 
+        LEFT JOIN comentario AS c ON p.idPost = c.fkPost 
+        LEFT JOIN usuario AS uC ON c.fkUsuario = uC.idUsuario WHERE p.idPost = ${idPost};
     `;
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);

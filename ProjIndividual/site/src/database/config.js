@@ -3,8 +3,8 @@ var mysql = require("mysql2");
 var mySqlConfig = {
     host: "localhost",
     database: "teste",
-    user: "root",
-    password: "tijolo22@",
+    user: "blog",
+    password: "urubu100",
 };
 
 function executar(instrucao) {
@@ -20,7 +20,7 @@ function executar(instrucao) {
             resolve(resultados);
         });
         conexao.on('error', function (erro) {
-            return ("ERRO NO MySQL WORKBENCH (Local): ", erro.sqlMessage);
+            return ("ERRO NO MySQL (Local): ", erro.sqlMessage);
         });
     });
 }
