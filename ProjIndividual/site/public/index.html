@@ -5,15 +5,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/lista.css">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/index.css">
     <script src="./js/login.js"></script>
     <title>Document</title>
 </head>
 
 <body>
+    <div id="loginBlocker" onclick="esconderLogin()"></div>
+
     <!-- Header -->
-    <div>
+    <div class="header">
+        <div>
+
+        </div>
         <ul>
             <li>Home</li>
             <li><a href="login.html">Login</a></li>
@@ -33,9 +38,25 @@
         <span id="spanErroLogin"></span>
     </div>
 
-    <div id="divLista" class="lista"></div>
 
-    <div id="divPost"></div>
+    <!-- Corpo -->
+    <div class="container">
+        <div id="divLista" class="lista"></div>
+        <div id="divPost"></div>
+        <div id="divData" class="data">
+            <ul>
+                <li onclick="filtrarMes(4)">Maio</li>
+                <li onclick="filtrarMes(3)">Abril</li>
+                <li onclick="filtrarMes(2)">Março</li>
+                <li onclick="filtrarMes(1)">Fevereiro</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+
+    </div>
 </body>
 
 </html>
@@ -63,7 +84,7 @@
                             </div>`;
                     }
                 });
-        } else {
+            } else {
                 throw ("Houve um erro ao obter as postagens!");
             }
         }).catch(function (resposta) {
@@ -72,14 +93,11 @@
     }
 
     function selecionarPost(idPost) {
-        fetch("/post/visualizar", {
-            method: "POST",
+        fetch(`/post/visualizar/${idPost}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json"
-            },
-            body: JSON.stringify ({
-                idPostServer: idPost
-            })
+            }
         }).then(function (resposta) {
 
             console.log("resposta: ", resposta);
@@ -87,23 +105,41 @@
             if (resposta.ok) {
                 divPost.innerHTML = '';
                 resposta.json().then(dados => {
-                    divPost.innerHTML = '';
-                    var texto = `<div class="post">
+                    divPost.innerHTML = `<div class="post">
                                 <h3><span class="botao" onclick="voltar()">&lt;</span>${dados[0].titulo}</h3>
                                 <p>${dados[0].textoPost}</p>
-                                <span>Criado em: ${new Date(dados[0].criacaoPost).toDateString()} por ${dados[0].poster}</span>`
-                    if (dados[0].textoComentario != null) {
-                        for (var i = 0; i < dados.length; i++) {
-                            texto += `<div class="comentario">
-                                    <p>${dados[i].textoComentario}</p>
-                                    <span>Criado em: ${new Date(dados[i].criacaoComent).toDateString()} por ${dados[i].commenter}</span>
-                                </div>`;
-                        }
-                    }
-
-                    divPost.innerHTML = texto;
+                                <span>Criado em: ${new Date(dados[0].dataCriacao).toDateString()} por ${dados[0].username}</span>`
                 });
-        } else {
+                fetch(`/comentario/listar/${idPost}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json().then(dados => {
+                            if (dados[0].textoComentario != null) {
+                                var texto = ''
+                                for (var i = 0; i < dados.length; i++) {
+                                    texto += `<div class="comentario">
+                                    <p>${dados[i].textoComentario}</p>
+                                    <span>Criado em: ${new Date(dados[i].dataCriacao).toDateString()} por ${dados[i].username}</span>`;    
+                                    if (dados[i].idUsuario == sessionStorage.ID_USUARIO) {
+                                        texto += `<div><button onclick="editarComentario(${dados[i].idUsuario})">Editar</button>
+                                                  <button onclick="apagarComentario(${dados[i].idUsuario})">Apagar</button></div>`;
+                                    }
+                                    texto += '</div>'
+                                }
+                                divPost.innerHTML += texto;
+                            }
+                        });
+                    } else {
+                        throw ("Houve um erro ao obter os comentários!");
+                    }
+                }).catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                });
+            } else {
                 throw ("Houve um erro ao obter as postagens!");
             }
         }).catch(function (resposta) {

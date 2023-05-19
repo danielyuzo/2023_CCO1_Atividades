@@ -1,5 +1,13 @@
 function exibirLogin() {
     loginContainer.style.display = 'flex';
+    loginBlocker.style.display = 'block';
+}
+
+function esconderLogin() {
+    inpNomeLogin.value = '';
+    inpSenhaLogin.value = '';
+    loginContainer.style.display = 'none';
+    loginBlocker.style.display = 'none';
 }
 
 function entrar() {
@@ -61,4 +69,9 @@ function entrar() {
     })
 
     return false;
+}
+
+function logout() {
+    sessionStorage.clear();
+    window.location = "../login.html";
 }

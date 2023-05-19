@@ -11,12 +11,13 @@ router.get("/listar", function (req, res) {
     postController.listar(req, res);
 });
 
-router.post("/cadastrar", function (req, res) {
-    postController.cadastrar(req, res);
+router.get("/visualizar/:idPost", function (req, res) {
+    postController.visualizar(req, res);
 });
 
-router.post("/visualizar", function (req, res) {
-    postController.visualizar(req, res);
+
+router.post("/cadastrar", function (req, res) {
+    postController.cadastrar(req, res);
 });
 
 // router.post("/autenticar", function (req, res) {

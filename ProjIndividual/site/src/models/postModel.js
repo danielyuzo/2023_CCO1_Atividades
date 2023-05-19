@@ -16,11 +16,9 @@ function visualizar(idPost) {
         // SELECT * FROM post JOIN comentario ON fkPost = idPost JOIN usuario ON  WHERE idPost = ${idPost};
     // `;
     var instrucao = `
-        SELECT p.idPost, p.titulo, p.textoPost, p.dataCriacao AS criacaoPost, p.dataEdicao AS edicaoPost, uP.username AS poster, 
-               c.textoComentario, c.dataCriacao AS criacaoComent, c.dataEdicao AS edicaoComent, uC.username AS commenter
-        FROM post AS p JOIN usuario AS uP ON p.fkUsuario = uP.idUsuario 
-        LEFT JOIN comentario AS c ON p.idPost = c.fkPost 
-        LEFT JOIN usuario AS uC ON c.fkUsuario = uC.idUsuario WHERE p.idPost = ${idPost};
+        SELECT p.idPost, p.titulo, p.textoPost, p.dataCriacao, p.dataEdicao, u.username
+        FROM post AS p JOIN usuario AS u ON p.fkUsuario = u.idUsuario 
+        WHERE p.idPost = ${idPost};
     `;
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);

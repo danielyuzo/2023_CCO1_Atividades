@@ -25,7 +25,7 @@ function listar(req, res) {
 }
 
 function visualizar(req, res) {
-    var idPost = req.body.idPostServer;
+    var idPost = req.params.idPost;
 
     if (idPost == undefined) {
         res.status(400).send("Seu idPost está undefined!");

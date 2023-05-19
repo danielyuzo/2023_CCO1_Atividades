@@ -11,12 +11,20 @@ router.get("/listar", function (req, res) {
     comentarioController.listar(req, res);
 });
 
+router.get("/listar/:idPost", function (req, res) {
+    comentarioController.listarPorPost(req, res);
+});
+
 router.post("/cadastrar", function (req, res) {
     comentarioController.cadastrar(req, res);
-})
+});
 
-// router.post("/autenticar", function (req, res) {
-//     comentarioController.entrar(req, res);
-// });
+router.put("/atualizar", function (req, res) {
+    comentarioController.atualizar(req, res);
+});
+
+router.delete("/apagar", function (req, res) {
+    comentarioController.apagar(req, res);
+});
 
 module.exports = router;
