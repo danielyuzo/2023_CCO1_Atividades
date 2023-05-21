@@ -48,6 +48,7 @@ function entrar() {
                 sessionStorage.EMAIL_USUARIO = json.email;
                 sessionStorage.NOME_USUARIO = json.username;
                 sessionStorage.ID_USUARIO = json.idUsuario;
+                sessionStorage.ADMIN = json.administrador == 0 ? false : true;
 
                 setTimeout(function () {
                     window.location = "./index.html";
@@ -73,5 +74,5 @@ function entrar() {
 
 function logout() {
     sessionStorage.clear();
-    window.location = "../login.html";
+    window.location = "../index.html";
 }

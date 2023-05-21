@@ -116,10 +116,37 @@ function cadastrar(req, res) {
     }
 }
 
+function apagar(req, res) {
+    var idPost = req.body.idPostServer;
+
+    if (idPost == undefined) {
+        res.status(400).send("Seu idPost está undefined!");
+    } else {
+        
+        postModel.apagar(idPost)
+            .then(
+                function (resultado) {
+                    res.json(resultado);
+                }
+            ).catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log(
+                        "\nHouve um erro ao apagar o comentário! Erro: ",
+                        erro.sqlMessage
+                    );
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );
+    }
+}
+
+
 module.exports = {
     // entrar,
     cadastrar,
     listar,
     visualizar,
-    testar
+    testar,
+    apagar
 }

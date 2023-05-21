@@ -20,6 +20,10 @@ router.post("/cadastrar", function (req, res) {
     postController.cadastrar(req, res);
 });
 
+router.delete("/apagar", function(req, res) {
+    postController.apagar(req, res);
+});
+
 // router.post("/autenticar", function (req, res) {
 //     postController.entrar(req, res);
 // });

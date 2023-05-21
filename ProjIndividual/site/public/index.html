@@ -11,8 +11,9 @@
     <title>Document</title>
 </head>
 
-<body>
-    <div id="loginBlocker" onclick="esconderLogin()"></div>
+<body id="body">
+    <div id="loginBlocker" class="blocker" onclick="esconderLogin()"></div>
+    <div id="deleteBlocker" class="blocker"></div>
 
     <!-- Header -->
     <div class="header">
@@ -21,7 +22,6 @@
         </div>
         <ul>
             <li>Home</li>
-            <li><a href="login.html">Login</a></li>
             <li><a href="cadastro.html">Cadastro</a></li>
             <li><a href="busca.html">Busca</a></li>
             <li onclick="exibirLogin()">Login</li>
@@ -53,6 +53,12 @@
         </div>
     </div>
 
+    <div id="deleteContainer" class="deleteCard">
+        <span id="spanDeleteMsg"></span>
+        <button id="butDelete" onclick="">Confirmar</button>
+        <button onclick="esconderDelete()">Cancelar</button>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
 
@@ -62,6 +68,20 @@
 </html>
 
 <script>
+
+    function batata() {
+        var r = Math.floor(Math.random()*255);
+        var g = Math.floor(Math.random()*255);
+        var b = Math.floor(Math.random()*255);
+        body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        r = Math.floor(Math.random()*255);
+        g = Math.floor(Math.random()*255);
+        b = Math.floor(Math.random()*255);
+        body.style.color = `rgb(${r}, ${g}, ${b})`;
+    }
+
+    var listaPosts = [];
+
     function atualizarLista() {
         fetch("/post/listar", {
             method: "GET",
@@ -75,7 +95,8 @@
             if (resposta.ok) {
                 divLista.innerHTML = '';
                 resposta.json().then(dados => {
-                    console.log(dados)
+                    console.log(dados);
+                    listaPosts = dados;
                     for (var i = 0; i < dados.length; i++) {
                         divLista.innerHTML += `<div class="post" onclick="selecionarPost(${dados[i].idPost})">
                                 <h3>${dados[i].titulo}</h3>
@@ -93,58 +114,67 @@
     }
 
     function selecionarPost(idPost) {
-        fetch(`/post/visualizar/${idPost}`, {
+
+        var post = listaPosts.find((x)=>x.idPost == idPost);
+
+        // fetch(`/post/visualizar/${idPost}`, {
+        //     method: "GET",
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     }
+        // }).then(function (resposta) {
+
+        //     console.log("resposta: ", resposta);
+
+        //     if (resposta.ok) {
+        divPost.innerHTML = '';
+        // resposta.json().then(dados => {
+        var texto =  `<div class="post">
+                    <h3><span class="botao" onclick="voltar()">&lt;</span>${post.titulo}</h3>
+                    <p>${post.textoPost}</p>
+                    <span>Criado em: ${new Date(post.dataCriacao).toDateString()} por ${post.username}</span>`
+        if (sessionStorage.ADMIN) {
+            texto += `<div><button onclick="editarPost(${post.idPost})">Editar</button>
+                        <button onclick="exibirApagarPost(${post.idPost})">Apagar</button></div>`;
+        }
+        texto += '</div>';
+        divPost.innerHTML = texto;
+        // });
+        fetch(`/comentario/listar/${idPost}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             }
         }).then(function (resposta) {
-
-            console.log("resposta: ", resposta);
-
             if (resposta.ok) {
-                divPost.innerHTML = '';
                 resposta.json().then(dados => {
-                    divPost.innerHTML = `<div class="post">
-                                <h3><span class="botao" onclick="voltar()">&lt;</span>${dados[0].titulo}</h3>
-                                <p>${dados[0].textoPost}</p>
-                                <span>Criado em: ${new Date(dados[0].dataCriacao).toDateString()} por ${dados[0].username}</span>`
-                });
-                fetch(`/comentario/listar/${idPost}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }).then(function (resposta) {
-                    if (resposta.ok) {
-                        resposta.json().then(dados => {
-                            if (dados[0].textoComentario != null) {
-                                var texto = ''
-                                for (var i = 0; i < dados.length; i++) {
-                                    texto += `<div class="comentario">
-                                    <p>${dados[i].textoComentario}</p>
-                                    <span>Criado em: ${new Date(dados[i].dataCriacao).toDateString()} por ${dados[i].username}</span>`;    
-                                    if (dados[i].idUsuario == sessionStorage.ID_USUARIO) {
-                                        texto += `<div><button onclick="editarComentario(${dados[i].idUsuario})">Editar</button>
-                                                  <button onclick="apagarComentario(${dados[i].idUsuario})">Apagar</button></div>`;
-                                    }
-                                    texto += '</div>'
-                                }
-                                divPost.innerHTML += texto;
+                    if (dados[0].textoComentario != null) {
+                        var texto = '';
+                        for (var i = 0; i < dados.length; i++) {
+                            texto += `<div id="comentario${dados[i].idComentario}" class="comentario">
+                            <p>${dados[i].textoComentario}</p>
+                            <span>Criado em: ${new Date(dados[i].dataCriacao).toDateString()} por ${dados[i].username}</span>`;    
+                            if (dados[i].idUsuario == sessionStorage.ID_USUARIO) {
+                                texto += `<div><button onclick="editarComentario(${dados[i].idComentario})">Editar</button>
+                                            <button onclick="exibirApagarComentario(${dados[i].idComentario})">Apagar</button></div>`;
                             }
-                        });
-                    } else {
-                        throw ("Houve um erro ao obter os comentários!");
+                            texto += '</div>'
+                        }
+                        divPost.innerHTML += texto;
                     }
-                }).catch(function (resposta) {
-                    console.log(`#ERRO: ${resposta}`);
                 });
             } else {
-                throw ("Houve um erro ao obter as postagens!");
+                throw ("Houve um erro ao obter os comentários!");
             }
         }).catch(function (resposta) {
             console.log(`#ERRO: ${resposta}`);
         });
+        //     } else {
+        //         throw ("Houve um erro ao obter as postagens!");
+        //     }
+        // }).catch(function (resposta) {
+        //     console.log(`#ERRO: ${resposta}`);
+        // });
         divLista.style.display = 'none';
         divPost.style.display = 'flex';
     }
@@ -156,6 +186,96 @@
         divLista.style.display = 'flex';
     }
 
+    var postParaApagar = null;
+
+    function exibirApagarPost(idPost) {
+        postParaApagar = idPost;
+        spanDeleteMsg.innerHTML = 'Deseja excluir o post?'
+        butDelete.onclick = apagarPost;
+        deleteBlocker.style.display = 'block';
+        deleteContainer.style.display = 'flex';
+    }
+
+    function apagarPost() {
+        alert('batata');
+        fetch("/post/apagar", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idPostServer: postParaApagar
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO entrar()!")
+            if (resposta.ok) {
+                esconderDelete();
+                voltar();
+                postParaApagar = null;
+            } else {
+                console.log("Houve um erro ao tentar apagar o post!");
+                resposta.text().then(texto => {
+                    console.error(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        });
+    }
+
+    function editarComentario(idComentario) {
+
+    }
+
+        var comentarioParaApagar = null;
+    
+    function exibirApagarComentario(idComentario) {
+        comentarioParaApagar = idComentario;
+        spanDeleteMsg.innerHTML = 'Deseja excluir o comentário?'
+        butDelete.onclick = apagarComentario;
+        deleteBlocker.style.display = 'block';
+        deleteContainer.style.display = 'flex';
+    }
+
+    function apagarComentario() {
+        fetch("/comentario/apagar", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idComentarioServer: comentarioParaApagar
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO entrar()!")
+            if (resposta.ok) {
+                esconderDelete();
+                var elemento = document.getElementById('comentario' + comentarioParaApagar);
+                elemento.remove();
+                comentarioParaApagar = null;
+            } else {
+                console.log("Houve um erro ao tentar apagar o comentário!");
+                resposta.text().then(texto => {
+                    console.error(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        });
+    }
+
+    function esconderDelete() {      
+        butDelete.onclick = '';  
+        spanDeleteMsg.innerHTML = '';
+        deleteBlocker.style.display = 'none';
+        deleteContainer.style.display = 'none';
+    }
+
     atualizarLista();
+
+
+
 
 </script>
