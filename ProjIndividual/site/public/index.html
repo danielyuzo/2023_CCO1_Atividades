@@ -12,6 +12,28 @@
 </head>
 
 <body id="body">
+    <svg height="600" width="200" class="svgLeft">
+        <path d="M0 0 Q140 0 100 145 
+        Q100 155 110 160 
+        L108 165 
+        Q65 160 75 240 
+        Q100 360 140 320 
+        L145 325 
+        Q130 340 145 370 
+        S230 580 0 580" stroke="darkturquoise" stroke-width="3" fill="none" />
+    </svg> 
+    <svg height="600" width="200" class="svgRight">
+        <path d="M200 0 
+        Q60 0 100 145 
+        Q100 155 90 160 
+        L92 165 
+        Q135 160 125 240 
+        Q100 360 60 320 
+        L55 325 
+        Q70 340 55 370 
+        S-30 580 200 580" stroke="darkturquoise" stroke-width="3" fill="none" />
+    </svg> 
+
     <div id="loginBlocker" class="blocker" onclick="esconderLogin()"></div>
     <div id="deleteBlocker" class="blocker"></div>
 
@@ -102,6 +124,7 @@
         });
     }
 
+
     function selecionarPost(idPost) {
 
         var post = listaPosts.find((x) => x.idPost == idPost);
@@ -109,19 +132,22 @@
         divPost.innerHTML = '';
         var texto = `<div class="post">
                     <h3><span class="botao" onclick="voltar()">&lt;</span>${post.titulo}</h3>
-                    <div id="divEditPost${idPost}" class="editarCard">
-                        <textarea id="txtPost${idPost}" rows="5" cols="50"></textarea><br>
-                        <button onclick="editarPost(${idPost})">Confirmar</button>
-                        <button onclick="esconderEditar(${idPost})">Cancelar</button>
-                    </div>
+
                     <div id="divShowPost${idPost}" class="mostrarCard">
                         <p id="pPost${idPost}">${post.textoPost}</p>
                         <span>Criado em: ${new Date(post.dataCriacao).toDateString()} por ${post.username}</span>`
         if (sessionStorage.ADMIN) {
             texto += `<div><button onclick="exibirEditarPost(${post.idPost})">Editar</button>
-                        <button onclick="exibirApagarPost(${post.idPost})">Apagar</button></div>`;
+                    <button onclick="exibirApagarPost(${post.idPost})">Apagar</button></div></div>
+                    <div id="divEditPost${idPost}" class="editarCard">
+                        <textarea id="txtPost${idPost}" rows="5" cols="50"></textarea><br>
+                        <button onclick="editarPost(${idPost})">Confirmar</button>
+                        <button onclick="esconderEditarPost(${idPost})">Cancelar</button>
+                    </div>
+                    </div>`;
+        } else {
+            texto += '</div></div>';
         }
-        texto += '</div></div>';
         divPost.innerHTML = texto;
 
         fetch(`/comentario/listar/${idPost}`, {
@@ -136,13 +162,20 @@
                         var texto = '';
                         for (var i = 0; i < dados.length; i++) {
                             texto += `<div id="comentario${dados[i].idComentario}" class="comentario">
-                            <p>${dados[i].textoComentario}</p>
+                            <div id="divShowComentario${dados[i].idComentario}">
+                            <p id="pComentario${dados[i].idComentario}">${dados[i].textoComentario}</p>
                             <span>Criado em: ${new Date(dados[i].dataCriacao).toDateString()} por ${dados[i].username}</span>`;
                             if (dados[i].idUsuario == sessionStorage.ID_USUARIO) {
-                                texto += `<div><button onclick="editarComentario(${dados[i].idComentario})">Editar</button>
-                                            <button onclick="exibirApagarComentario(${dados[i].idComentario})">Apagar</button></div>`;
+                                texto += `<div><button onclick="exibirEditarComentario(${dados[i].idComentario})">Editar</button>
+                                        <button onclick="exibirApagarComentario(${dados[i].idComentario})">Apagar</button></div></div>
+                                        <div id="divEditComentario${dados[i].idComentario}" class="editarCard">
+                                            <textarea id="txtComentario${dados[i].idComentario}" rows="5" cols="50"></textarea><br>
+                                            <button onclick="editarComentario(${dados[i].idComentario})">Confirmar</button>
+                                            <button onclick="esconderEditarComentario(${dados[i].idComentario})">Cancelar</button>
+                                        </div></div>`;
+                            } else {
+                                texto += '</div></div>'
                             }
-                            texto += '</div>'
                         }
                         divPost.innerHTML += texto;
                     }
@@ -163,6 +196,8 @@
         divPost.style.display = 'none';
         divLista.style.display = 'flex';
     }
+
+
 
     function exibirEditarPost(idPost) {
         var pPost = document.getElementById('pPost' + idPost);
@@ -206,7 +241,7 @@
         });
     }
 
-    function esconderEditar(idPost) {
+    function esconderEditarPost(idPost) {
         var divEditPost = document.getElementById('divEditPost' + idPost);
         var divShowPost = document.getElementById('divShowPost' + idPost)
         var textArea = document.getElementById('txtPost' + idPost);
@@ -215,6 +250,7 @@
         divShowPost.style.display = 'block';
         textArea.innerHTML = '';
     }
+
 
     var postParaApagar = null;
 
@@ -253,9 +289,60 @@
         });
     }
 
-    function editarComentario(idComentario) {
 
+
+    function exibirEditarComentario(idComentario) {
+        var pComentario = document.getElementById('pComentario' + idComentario);
+        var divEditComentario = document.getElementById('divEditComentario' + idComentario);
+        var divShowComentario = document.getElementById('divShowComentario' + idComentario)
+        var textArea = document.getElementById('txtComentario' + idComentario);
+
+        divEditComentario.style.display = 'block';
+        divShowComentario.style.display = 'none';
+        textArea.value = pComentario.innerHTML;
     }
+
+    function editarComentario(idComentario) {
+        var textArea = document.getElementById('txtComentario' + idComentario);
+        var textoComentario = textArea.value;
+
+        fetch("/comentario/atualizar", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idComentarioServer: idComentario,
+                textoComentarioServer: textoComentario
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO atualizar()!")
+            if (resposta.ok) {
+                var pComentario = document.getElementById('pComentario' + idComentario);
+                pComentario.innerHTML = textoComentario;
+                esconderEditarComentario(idComentario);
+            } else {
+                console.log("Houve um erro ao tentar atualizar o comentário!");
+                resposta.text().then(texto => {
+                    console.error(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        });
+    }
+
+    function esconderEditarComentario(idComentario) {
+        var divEditComentario = document.getElementById('divEditComentario' + idComentario);
+        var divShowComentario = document.getElementById('divShowComentario' + idComentario)
+        var textArea = document.getElementById('txtComentario' + idComentario);
+
+        divEditComentario.style.display = 'none';
+        divShowComentario.style.display = 'block';
+        textArea.innerHTML = '';
+    }
+
 
     var comentarioParaApagar = null;
 
@@ -301,6 +388,7 @@
         deleteBlocker.style.display = 'none';
         deleteContainer.style.display = 'none';
     }
+
 
     atualizarLista();
 </script>

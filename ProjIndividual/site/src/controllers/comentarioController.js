@@ -76,15 +76,15 @@ function cadastrar(req, res) {
 
 function atualizar(req, res) {
     var idComentario = req.body.idComentarioServer;
-    var texto = req.body.textoServer;
+    var textoComentario = req.body.textoComentarioServer;
 
     if (idComentario == undefined) {
         res.status(400).send("Seu idComentario está undefined!");
-    } else if (texto == undefined) {
-        res.status(400).send("Seu texto está undefined!");
+    } else if (textoComentario == undefined) {
+        res.status(400).send("Seu textoComentario está undefined!");
     } else {
         
-        comentarioModel.atualizar(idComentario, texto)
+        comentarioModel.atualizar(idComentario, textoComentario)
             .then(
                 function (resultado) {
                     res.json(resultado);

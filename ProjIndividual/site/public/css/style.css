@@ -5,6 +5,15 @@ body {
     margin: 0px;
 }
 
+.svgLeft {
+    position: fixed;
+}
+
+.svgRight {
+    position: fixed;
+    right: 0%;
+}
+
 .blocker {
     width: 100%;
     height: 100%;

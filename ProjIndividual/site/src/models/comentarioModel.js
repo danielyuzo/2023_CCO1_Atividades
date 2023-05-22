@@ -38,14 +38,11 @@ function cadastrar(post, texto, usuario) {
     return database.executar(instrucao);
 }
 
-function atualizar(idComentario, texto) {
-    console.log("ACESSEI O COMENTARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", nome, email, senha);
-    
-    var now = new Date();
-    var dataHora = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()} ${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
+function atualizar(idComentario, textoComentario) {
+    console.log("ACESSEI O COMENTARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function atualizar():", idComentario, textoComentario);
 
     var instrucao = `
-        UPDATE comentario SET textoComentario =  '${texto}', dataEdicao = '${dataHora}' WHERE idComentario = ${idComentario};
+        UPDATE comentario SET textoComentario =  '${textoComentario}', dataEdicao = now() WHERE idComentario = ${idComentario};
     `;
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);
