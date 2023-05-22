@@ -20,6 +20,10 @@ router.post("/cadastrar", function (req, res) {
     postController.cadastrar(req, res);
 });
 
+router.put("/atualizar", function(req, res) {
+    postController.atualizar(req, res);
+});
+
 router.delete("/apagar", function(req, res) {
     postController.apagar(req, res);
 });

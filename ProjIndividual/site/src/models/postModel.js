@@ -46,6 +46,16 @@ function cadastrar(titulo, texto, usuario) {
     return database.executar(instrucao);
 }
 
+function atualizar(idPost, textoPost) {
+    console.log("ACESSEI O POST MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function atualizar():", idPost, textoPost);
+
+    var instrucao = `
+        UPDATE post SET textoPost = '${textoPost}', dataEdicao = now() WHERE idPost = ${idPost};
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucao);
+    return database.executar(instrucao);
+}
+
 function apagar(idPost) {
     console.log("ACESSEI O POST MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function apagar():", idPost);
 
@@ -61,5 +71,6 @@ module.exports = {
     cadastrar,
     listar,
     visualizar,
+    atualizar,
     apagar,
 };

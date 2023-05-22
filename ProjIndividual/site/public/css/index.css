@@ -58,8 +58,19 @@
     padding: 10px;
     position: fixed;
     right: 40%;
-    top: 50%;
+    top: 40%;
     border: 1px solid white;
     border-radius:5px;
     background-color: black;
+}
+
+.editarCard {
+    display: none;
+    width: 100%;
+}
+
+.mostrarCard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }

@@ -69,17 +69,6 @@
 
 <script>
 
-    function batata() {
-        var r = Math.floor(Math.random()*255);
-        var g = Math.floor(Math.random()*255);
-        var b = Math.floor(Math.random()*255);
-        body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-        r = Math.floor(Math.random()*255);
-        g = Math.floor(Math.random()*255);
-        b = Math.floor(Math.random()*255);
-        body.style.color = `rgb(${r}, ${g}, ${b})`;
-    }
-
     var listaPosts = [];
 
     function atualizarLista() {
@@ -115,31 +104,26 @@
 
     function selecionarPost(idPost) {
 
-        var post = listaPosts.find((x)=>x.idPost == idPost);
+        var post = listaPosts.find((x) => x.idPost == idPost);
 
-        // fetch(`/post/visualizar/${idPost}`, {
-        //     method: "GET",
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     }
-        // }).then(function (resposta) {
-
-        //     console.log("resposta: ", resposta);
-
-        //     if (resposta.ok) {
         divPost.innerHTML = '';
-        // resposta.json().then(dados => {
-        var texto =  `<div class="post">
+        var texto = `<div class="post">
                     <h3><span class="botao" onclick="voltar()">&lt;</span>${post.titulo}</h3>
-                    <p>${post.textoPost}</p>
-                    <span>Criado em: ${new Date(post.dataCriacao).toDateString()} por ${post.username}</span>`
+                    <div id="divEditPost${idPost}" class="editarCard">
+                        <textarea id="txtPost${idPost}" rows="5" cols="50"></textarea><br>
+                        <button onclick="editarPost(${idPost})">Confirmar</button>
+                        <button onclick="esconderEditar(${idPost})">Cancelar</button>
+                    </div>
+                    <div id="divShowPost${idPost}" class="mostrarCard">
+                        <p id="pPost${idPost}">${post.textoPost}</p>
+                        <span>Criado em: ${new Date(post.dataCriacao).toDateString()} por ${post.username}</span>`
         if (sessionStorage.ADMIN) {
-            texto += `<div><button onclick="editarPost(${post.idPost})">Editar</button>
+            texto += `<div><button onclick="exibirEditarPost(${post.idPost})">Editar</button>
                         <button onclick="exibirApagarPost(${post.idPost})">Apagar</button></div>`;
         }
-        texto += '</div>';
+        texto += '</div></div>';
         divPost.innerHTML = texto;
-        // });
+
         fetch(`/comentario/listar/${idPost}`, {
             method: "GET",
             headers: {
@@ -153,7 +137,7 @@
                         for (var i = 0; i < dados.length; i++) {
                             texto += `<div id="comentario${dados[i].idComentario}" class="comentario">
                             <p>${dados[i].textoComentario}</p>
-                            <span>Criado em: ${new Date(dados[i].dataCriacao).toDateString()} por ${dados[i].username}</span>`;    
+                            <span>Criado em: ${new Date(dados[i].dataCriacao).toDateString()} por ${dados[i].username}</span>`;
                             if (dados[i].idUsuario == sessionStorage.ID_USUARIO) {
                                 texto += `<div><button onclick="editarComentario(${dados[i].idComentario})">Editar</button>
                                             <button onclick="exibirApagarComentario(${dados[i].idComentario})">Apagar</button></div>`;
@@ -169,12 +153,6 @@
         }).catch(function (resposta) {
             console.log(`#ERRO: ${resposta}`);
         });
-        //     } else {
-        //         throw ("Houve um erro ao obter as postagens!");
-        //     }
-        // }).catch(function (resposta) {
-        //     console.log(`#ERRO: ${resposta}`);
-        // });
         divLista.style.display = 'none';
         divPost.style.display = 'flex';
     }
@@ -184,6 +162,58 @@
         divPost.innerHTML = '';
         divPost.style.display = 'none';
         divLista.style.display = 'flex';
+    }
+
+    function exibirEditarPost(idPost) {
+        var pPost = document.getElementById('pPost' + idPost);
+        var divEditPost = document.getElementById('divEditPost' + idPost);
+        var divShowPost = document.getElementById('divShowPost' + idPost)
+        var textArea = document.getElementById('txtPost' + idPost);
+
+        divEditPost.style.display = 'block';
+        divShowPost.style.display = 'none';
+        textArea.value = pPost.innerHTML;
+    }
+
+    function editarPost(idPost) {
+        var textArea = document.getElementById('txtPost' + idPost);
+        var textoPost = textArea.value;
+
+        fetch("/post/atualizar", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idPostServer: idPost,
+                textoPostServer: textoPost
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO atualizar()!")
+            if (resposta.ok) {
+                var pPost = document.getElementById('pPost' + idPost);
+                pPost.innerHTML = textoPost;
+                esconderEditar(idPost);
+            } else {
+                console.log("Houve um erro ao tentar atualizar o post!");
+                resposta.text().then(texto => {
+                    console.error(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        });
+    }
+
+    function esconderEditar(idPost) {
+        var divEditPost = document.getElementById('divEditPost' + idPost);
+        var divShowPost = document.getElementById('divShowPost' + idPost)
+        var textArea = document.getElementById('txtPost' + idPost);
+
+        divEditPost.style.display = 'none';
+        divShowPost.style.display = 'block';
+        textArea.innerHTML = '';
     }
 
     var postParaApagar = null;
@@ -197,7 +227,6 @@
     }
 
     function apagarPost() {
-        alert('batata');
         fetch("/post/apagar", {
             method: "DELETE",
             headers: {
@@ -228,8 +257,8 @@
 
     }
 
-        var comentarioParaApagar = null;
-    
+    var comentarioParaApagar = null;
+
     function exibirApagarComentario(idComentario) {
         comentarioParaApagar = idComentario;
         spanDeleteMsg.innerHTML = 'Deseja excluir o comentário?'
@@ -266,16 +295,12 @@
         });
     }
 
-    function esconderDelete() {      
-        butDelete.onclick = '';  
+    function esconderDelete() {
+        butDelete.onclick = '';
         spanDeleteMsg.innerHTML = '';
         deleteBlocker.style.display = 'none';
         deleteContainer.style.display = 'none';
     }
 
     atualizarLista();
-
-
-
-
 </script>

@@ -116,6 +116,35 @@ function cadastrar(req, res) {
     }
 }
 
+function atualizar(req, res) {
+    var textoPost = req.body.textoPostServer;
+    var idPost = req.body.idPostServer;
+
+    if (textoPost == undefined) {
+        res.status(400).send("Seu textoPost está undefined!");
+    } else if(idPost == undefined) {
+        res.status(400).send("Seu idPost está undefined!");
+    } else {
+        
+        // Passe os valores como parâmetro e vá para o arquivo postModel.js
+        postModel.atualizar(idPost, textoPost)
+            .then(
+                function (resultado) {
+                    res.json(resultado);
+                }
+            ).catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log(
+                        "\nHouve um erro ao atualizar o post! Erro: ",
+                        erro.sqlMessage
+                    );
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );
+    }
+}
+
 function apagar(req, res) {
     var idPost = req.body.idPostServer;
 
@@ -148,5 +177,6 @@ module.exports = {
     listar,
     visualizar,
     testar,
+    atualizar,
     apagar
 }
