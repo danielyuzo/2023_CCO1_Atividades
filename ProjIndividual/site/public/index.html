@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/index.css">
     <script src="./js/login.js"></script>
+    <script src="./js/funcoes.js"></script>
     <title>Document</title>
 </head>
 
@@ -38,16 +39,7 @@
     <div id="deleteBlocker" class="blocker"></div>
 
     <!-- Header -->
-    <div class="header">
-        <div>
-
-        </div>
-        <ul>
-            <li>Home</li>
-            <li><a href="cadastro.html">Cadastro</a></li>
-            <li><a href="busca.html">Busca</a></li>
-            <li onclick="exibirLogin()">Login</li>
-        </ul>
+    <div class="header" id="divHeader">
     </div>
 
     <!-- Login -->
@@ -82,8 +74,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="footer">
-
+    <div class="footer" id="divFooter">
     </div>
 </body>
 
@@ -131,7 +122,7 @@
 
         divPost.innerHTML = '';
         var texto = `<div class="post">
-                    <h3><span class="botao" onclick="voltar()">&lt;</span>${post.titulo}</h3>
+                    <h3><span class="botao" onclick="voltar()">&lt;</span>${post.titulo} ${post.visualizacoes}</h3>
 
                     <div id="divShowPost${idPost}" class="mostrarCard">
                         <p id="pPost${idPost}">${post.textoPost}</p>
@@ -185,6 +176,22 @@
             }
         }).catch(function (resposta) {
             console.log(`#ERRO: ${resposta}`);
+        });
+
+        fetch('/post/visualizar', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idPostServer: idPost
+            })
+        }).then(function (resposta) {
+            if (resposta.ok) {
+                // Alterar visualizações
+            }
+        }).catch(function (erro) {
+            console.log(erro);
         });
         divLista.style.display = 'none';
         divPost.style.display = 'flex';
@@ -390,5 +397,7 @@
     }
 
 
+    printarHeader();
+    printarFooter();
     atualizarLista();
 </script>

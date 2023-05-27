@@ -16,7 +16,7 @@ CREATE TABLE post(
     textoPost VARCHAR(500),
     dataCriacao DATETIME,
     dataEdicao DATETIME,
-    visualizacoes INT,
+    visualizacoes INT DEFAULT 0,
     fkUsuario INT NOT NULL,
     FOREIGN KEY (fkUsuario) REFERENCES usuario(idUsuario) ON DELETE CASCADE
 );

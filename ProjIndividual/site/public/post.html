@@ -6,9 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/cadastro.css">
+    <script src="./js/funcoes.js"></script>
     <title>Document</title>
 </head>
 <body>
+    <svg height="600" width="200" class="svgLeft">
+        <path d="M0 0 Q140 0 100 145 
+        Q100 155 110 160 
+        L108 165 
+        Q65 160 75 240 
+        Q100 360 140 320 
+        L145 325 
+        Q130 340 145 370 
+        S230 580 0 580" stroke="darkturquoise" stroke-width="3" fill="none" />
+    </svg> 
+    <svg height="600" width="200" class="svgRight">
+        <path d="M200 0 
+        Q60 0 100 145 
+        Q100 155 90 160 
+        L92 165 
+        Q135 160 125 240 
+        Q100 360 60 320 
+        L55 325 
+        Q70 340 55 370 
+        S-30 580 200 580" stroke="darkturquoise" stroke-width="3" fill="none" />
+    </svg> 
+
+    <div id="loginBlocker" class="blocker" onclick="esconderLogin()"></div>
+    <div id="deleteBlocker" class="blocker"></div>
+
+    <!-- Header -->
+    <div class="header" id="divHeader">
+    </div>
+
+
     <div class="formCadastro">
         Título:
         <input id="inpTitulo">
@@ -41,4 +72,8 @@
     }
 
     obterCategorias();
+
+
+    printarHeader();
+    printarFooter();
 </script>
