@@ -15,6 +15,13 @@ function visualizar(idPost) {
     // var instrucao = `
         // SELECT * FROM post JOIN comentario ON fkPost = idPost JOIN usuario ON  WHERE idPost = ${idPost};
     // `;
+    var instrucao = `UPDATE post SET visualizacoes = visualizacoes + 1 WHERE idPost = ${idPost}`;
+    try {
+        database.executar(instrucao);
+    } catch (erro) {
+        console.error("Erro ao atualizar visualizações: " + erro);
+    }
+
     var instrucao = `
         SELECT p.idPost, p.titulo, p.textoPost, p.dataCriacao, p.dataEdicao, u.username
         FROM post AS p JOIN usuario AS u ON p.fkUsuario = u.idUsuario 
@@ -24,23 +31,11 @@ function visualizar(idPost) {
     return database.executar(instrucao);
 }
 
-// function entrar(email, senha) {
-//     console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar(): ", email, senha)
-//     var instrucao = `
-//         SELECT * FROM usuario WHERE email = '${email}' AND senha = '${senha}';
-//     `;
-//     console.log("Executando a instrução SQL: \n" + instrucao);
-//     return database.executar(instrucao);
-// }
-
 function cadastrar(titulo, texto, usuario) {
-    console.log("ACESSEI O POST MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", nome, email, senha);
-    
-    var now = new Date();
-    var dataHora = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()} ${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
+    console.log("ACESSEI O POST MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", titulo, texto, usuario);
 
     var instrucao = `
-        INSERT INTO post (titulo, texto, dataCriacao, dataEdicao, fkUsuario) VALUES ('${titulo}', '${texto}', '${dataHora}', '${dataHora}', ${usuario});
+        INSERT INTO post (titulo, texto, dataCriacao, dataEdicao, fkUsuario) VALUES ('${titulo}', '${texto}', now(), now(), ${usuario});
     `;
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);

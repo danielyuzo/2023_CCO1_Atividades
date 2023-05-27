@@ -4,31 +4,41 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/cadastro.css">
     <title>Document</title>
 </head>
 <body>
-    <div class="lista" id="divLista">
-
+    <div class="formCadastro">
+        Título:
+        <input id="inpTitulo">
+        Post:
+        <textarea rows="10" cols="100" id="inpTexto"></textarea>
+        Categorias:
+        <div id="divCategorias">
+        </div>
+        <button onclick="validarEntradas()">Cadastrar</button>
     </div>
 </body>
 </html>
 
 <script>
-    function listarPostagens() {
-        var params = new URLSearchParams(location.search);
-        alert(params.get("id"));
-        var http = new XMLHttpRequest();
-        http.open('GET', 'http://localhost:3000/posts/' + params.get("id"), false);
-        http.send(null);
-        var lista = JSON.parse(http.responseText);
-        divLista.innerHTML = `<div><h3>${lista[0].titulo}</h3><br>
-                    <p>${lista[0].textoPost}</p><br>
-                    Criado em: ${lista[0].dataCriacao} por ${lista[0].fkUsuario}<br><br>`;
-        for (var i = 0; i < lista.length; i++) {
-            divLista.innerHTML += `<div><p>${lista[i].textoComentario}</p><br>
-                    Criado em: ${lista[i].dataCriacao} por ${lista[i].fkUsuario}<br><br>`;
-        }
+    function obterCategorias() {
+        fetch("/categoria/listar/").then((resposta) => {
+            if (resposta.ok) {
+                resposta.json().then(dados => {
+                    divCategorias.innerHTML = '';
+                    for (var i = 0; i < dados.length; i++) {
+                        divCategorias.innerHTML += `<input type="checkbox" value="${dados[i].idCategoria}">${dados[i].nome}<br>`;
+                    }
+                });
+            } else {
+                console.log(resposta);
+            }
+        }).catch((erro) => {
+            console.error(erro);
+        });
     }
 
-    listarPostagens();
+    obterCategorias();
 </script>

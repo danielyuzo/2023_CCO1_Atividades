@@ -6,12 +6,14 @@ body {
 }
 
 .svgLeft {
-    position: fixed;
+    /* position: absolute; */
+    top: 100px;
 }
 
 .svgRight {
-    position: fixed;
+    position: absolute;
     right: 0%;
+    /* top: 100px; */
 }
 
 .blocker {
