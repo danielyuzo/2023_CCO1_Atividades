@@ -235,7 +235,7 @@
             if (resposta.ok) {
                 var pPost = document.getElementById('pPost' + idPost);
                 pPost.innerHTML = textoPost;
-                esconderEditar(idPost);
+                esconderEditarPost(idPost);
             } else {
                 console.log("Houve um erro ao tentar atualizar o post!");
                 resposta.text().then(texto => {

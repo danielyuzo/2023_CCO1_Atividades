@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,6 +10,7 @@
     <script src="./js/funcoes.js"></script>
     <title>Document</title>
 </head>
+
 <body>
     <svg height="600" width="200" class="svgLeft">
         <path d="M0 0 Q140 0 100 145 
@@ -19,7 +21,7 @@
         L145 325 
         Q130 340 145 370 
         S230 580 0 580" stroke="darkturquoise" stroke-width="3" fill="none" />
-    </svg> 
+    </svg>
     <svg height="600" width="200" class="svgRight">
         <path d="M200 0 
         Q60 0 100 145 
@@ -30,7 +32,7 @@
         L55 325 
         Q70 340 55 370 
         S-30 580 200 580" stroke="darkturquoise" stroke-width="3" fill="none" />
-    </svg> 
+    </svg>
 
     <div id="loginBlocker" class="blocker" onclick="esconderLogin()"></div>
     <div id="deleteBlocker" class="blocker"></div>
@@ -51,6 +53,7 @@
         <button onclick="validarEntradas()">Cadastrar</button>
     </div>
 </body>
+
 </html>
 
 <script>
@@ -60,7 +63,7 @@
                 resposta.json().then(dados => {
                     divCategorias.innerHTML = '';
                     for (var i = 0; i < dados.length; i++) {
-                        divCategorias.innerHTML += `<input type="checkbox" value="${dados[i].idCategoria}">${dados[i].nome}<br>`;
+                        divCategorias.innerHTML += `<input name="categoria" type="checkbox" value="${dados[i].idCategoria}">${dados[i].nome}<br>`;
                     }
                 });
             } else {
@@ -69,6 +72,79 @@
         }).catch((erro) => {
             console.error(erro);
         });
+    }
+
+    function validarEntradas() {
+        var titulo = inpTitulo.value;
+        var texto = inpTexto.value;
+        var validado = true;
+        if (titulo.length <= 0) {
+            validado = false;
+            inpTitulo.style.border = '1px solid red';
+        } else {
+            inpTitulo.style.border = '1px solid black';
+        }
+        if (texto.length <= 0) {
+            validado = false;
+            inpTexto.style.border = '1px solid red';
+        } else {
+            inpTexto.style.border = '1px solid black';
+        }
+
+        if (validado) {
+            fetch('/post/cadastrar', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    tituloServer: titulo,
+                    textoServer: texto,
+                    usuarioServer: sessionStorage.ID_USUARIO
+                })
+            }).then((response) => {
+                if (response.ok) {
+                    fetch('/post/listarUltimoPost/' + sessionStorage.ID_USUARIO)
+                        .then((response) => {
+                            if (response.ok) {
+                                var idPost = response[0].idPost;
+
+                                var categorias = [];
+
+                                fetch('/post/cadastrarCategorias', {
+                                    method: 'POST',
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                        categoriasServer: categorias,
+                                        usuarioServer: sessionStorage.ID_USUARIO
+                                    })
+                                })
+                                .then((response)=>{
+                                    if (response.ok) {
+
+                                    } else {
+                                        
+                                    }
+                                })
+                                .catch((erro)=>{
+
+                                })
+                            } else {
+
+                            }
+                        })
+                        .catch((erro) => {
+
+                        })
+                } else {
+
+                }
+            }).catch((erro) => {
+
+            })
+        }
     }
 
     obterCategorias();

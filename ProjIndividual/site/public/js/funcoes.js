@@ -1,3 +1,9 @@
+function validarSessao() {
+    if (sessionStorage.ADMIN != 1) {
+        window.location = './index.html';
+    }
+}
+
 function printarHeader() {
     var texto = `
         <div>
@@ -17,7 +23,7 @@ function printarHeader() {
         texto += `
                 <li><a href="cadastro.html">Cadastro</a></li>
                 <li><a href="busca.html">Busca</a></li>
-                <li onclick="exibirLogin()">Login</li>
+                <li onclick="exibirLogin()"><img src="./img/login.svg" alt="Login"></li>
             </ul>`;
     }
     console.log(texto);

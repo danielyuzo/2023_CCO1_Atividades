@@ -11,13 +11,20 @@ router.get("/listar", function (req, res) {
     postController.listar(req, res);
 });
 
+router.get("/listarUltimoPost/:idUsuario", function (req, res) {
+    postController.listarUltimoPost(req, res);
+});
+
 router.post("/visualizar/", function (req, res) {
     postController.visualizar(req, res);
 });
 
-
 router.post("/cadastrar", function (req, res) {
     postController.cadastrar(req, res);
+});
+
+router.post("/cadastrarCategorias", function (req, res) {
+    postController.cadastrarCategorias(req, res);
 });
 
 router.put("/atualizar", function(req, res) {
