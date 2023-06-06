@@ -52,18 +52,26 @@
         </div>
         <button onclick="validarEntradas()">Cadastrar</button>
     </div>
+
+    <!-- Footer -->
+    <div class="footer" id="divFooter">
+    </div>
 </body>
 
 </html>
 
 <script>
+
+    var idCategorias = [];
+
     function obterCategorias() {
         fetch("/categoria/listar/").then((resposta) => {
             if (resposta.ok) {
                 resposta.json().then(dados => {
                     divCategorias.innerHTML = '';
                     for (var i = 0; i < dados.length; i++) {
-                        divCategorias.innerHTML += `<input name="categoria" type="checkbox" value="${dados[i].idCategoria}">${dados[i].nome}<br>`;
+                        idCategorias.push(`inpCategoria${dados[i].idCategoria}`);
+                        divCategorias.innerHTML += `<input id="${idCategorias[i]}" type="checkbox" value="${dados[i].idCategoria}">${dados[i].nome}<br>`;
                     }
                 });
             } else {
@@ -107,42 +115,54 @@
                     fetch('/post/listarUltimoPost/' + sessionStorage.ID_USUARIO)
                         .then((response) => {
                             if (response.ok) {
-                                var idPost = response[0].idPost;
-
-                                var categorias = [];
-
-                                fetch('/post/cadastrarCategorias', {
-                                    method: 'POST',
-                                    headers: {
-                                        "Content-Type": "application/json"
-                                    },
-                                    body: JSON.stringify({
-                                        categoriasServer: categorias,
-                                        usuarioServer: sessionStorage.ID_USUARIO
-                                    })
-                                })
-                                .then((response)=>{
-                                    if (response.ok) {
-
-                                    } else {
-                                        
+                                response.json().then((resposta) => {
+                                    var idPost = resposta[0].idPost;
+                                    var categorias = [];
+                                    for (let i = 0; i < idCategorias.length; i++) {
+                                        let checkbox = document.getElementById(idCategorias[i])
+                                        if (checkbox.checked) {
+                                            categorias.push(checkbox.value);
+                                        }
                                     }
-                                })
-                                .catch((erro)=>{
+
+                                    if (categorias.length > 0) {
+                                        fetch('/post/cadastrarCategorias', {
+                                            method: 'POST',
+                                            headers: {
+                                                "Content-Type": "application/json"
+                                            },
+                                            body: JSON.stringify({
+                                                categoriasServer: categorias,
+                                                idPostServer: idPost
+                                            })
+                                        })
+                                            .then((response) => {
+                                                if (response.ok) {
+                                                    window.location = 'index.html';
+                                                } else {
+                                                    console.error(response);
+                                                }
+                                            })
+                                            .catch((erro) => {
+                                                console.error(erro);
+                                            })
+                                    } else {
+                                        window.location = 'index.html';
+                                    }
 
                                 })
                             } else {
-
+                                console.error(response);
                             }
                         })
                         .catch((erro) => {
-
+                            console.error(erro);
                         })
                 } else {
-
+                    console.error(response);
                 }
             }).catch((erro) => {
-
+                console.error(erro);
             })
         }
     }

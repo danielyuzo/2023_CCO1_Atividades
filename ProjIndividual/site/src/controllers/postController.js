@@ -25,7 +25,7 @@ function listar(req, res) {
 }
 
 function listarUltimoPost(req, res) {
-    var idUsuario = req.params.idUsuarioServer;
+    var idUsuario = req.params.idUsuario;
 
     if (idUsuario == undefined) {
         res.status(400).send("Seu idUsuario está undefined!");
@@ -106,6 +106,29 @@ function cadastrar(req, res) {
 function cadastrarCategorias(req, res) {
     var categorias = req.body.categoriasServer;
     var idPost = req.body.idPostServer;
+    if (categorias == undefined) {
+        res.status(400).send("Suas categorias estão undefined!");
+    } else if (idPost == undefined) {
+        res.status(400).send("Seu idPost está undefined!");
+    } else {
+        
+        // Passe os valores como parâmetro e vá para o arquivo postModel.js
+        postModel.cadastrarCategorias(categorias, idPost)
+            .then(
+                function (resultado) {
+                    res.json(resultado);
+                }
+            ).catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log(
+                        "\nHouve um erro ao realizar o cadastro! Erro: ",
+                        erro.sqlMessage
+                    );
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );
+    }
 }
 
 function atualizar(req, res) {

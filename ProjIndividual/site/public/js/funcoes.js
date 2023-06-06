@@ -10,7 +10,6 @@ function printarHeader() {
         </div>
         <ul>
             <li><a href="index.html">Home</a></li>`;
-    console.log(texto);
     if (sessionStorage.ID_USUARIO != null) {
         if (sessionStorage.ADMIN == 1) {
             texto += `<li><a href="post.html">Criar novo Post</a></li>`;
@@ -26,7 +25,6 @@ function printarHeader() {
                 <li onclick="exibirLogin()"><img src="./img/login.svg" alt="Login"></li>
             </ul>`;
     }
-    console.log(texto);
     divHeader.innerHTML = texto
 }
 
