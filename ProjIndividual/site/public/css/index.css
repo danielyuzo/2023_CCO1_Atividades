@@ -101,3 +101,26 @@
 .navButton:hover {
     background-color: #333333;
 }
+
+.navCard {
+    display: none;
+    flex-direction: column;
+    width: 10%;
+    height: auto;
+    padding: 10px;
+    position: fixed;
+    left: 45%;
+    top: 40%;
+    border: 1px solid white;
+    border-radius:5px;
+    background-color: black;
+}
+
+.navCard input {
+    width: 94%;
+    margin: 5px 0px;
+}
+
+.navCard button {
+    width: 100%;
+}

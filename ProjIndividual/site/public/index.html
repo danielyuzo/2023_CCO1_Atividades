@@ -37,6 +37,7 @@
 
     <div id="loginBlocker" class="blocker" onclick="esconderLogin()"></div>
     <div id="deleteBlocker" class="blocker"></div>
+    <div id="navBlocker" class="blocker" onclick="esconderNavegacao()"></div>
 
     <!-- Header -->
     <div class="header" id="divHeader">
@@ -52,6 +53,12 @@
         <span id="spanErroLogin"></span>
     </div>
 
+    <!-- Navegação -->
+    <div id="navContainer" class="navCard">
+        Número da página:
+        <input id="inpNavPagina">
+        <button onclick="exibirListaPosts(inpNavPagina.value)">Ir</button>
+    </div>
 
     <!-- Corpo -->
     <div class="container">
@@ -113,6 +120,8 @@
 
     function exibirListaPosts(pagina) {
 
+        esconderNavegacao();
+
         divLista.innerHTML = '';
         for (var i = (pagina - 1) * itensPorPagina; i < listaPosts.length && i < pagina * itensPorPagina; i++) {
             divLista.innerHTML += `<div class="post" onclick="selecionarPost(${listaPosts[i].idPost})">
@@ -134,14 +143,22 @@
                 navegador += `<div class="navButton" onclick="exibirListaPosts(${pagina - 1})"><img src="./img/nav_left.svg"></div>`;
             }
 
+            if (pagina >= 4) {
+                navegador += `<div class="navButton" onclick="exibirNavegacao()">...</div>`;
+            }
+
             for (let i = Math.max(1, pagina - 2); i <= Math.min(pagina + 2, paginaMax); i++) {
                 if (i == pagina) {
-                    navegador += `<div class="navButton"><b>${i}</b></div>`;
+                    navegador += `<div class="navButton"><u>${i}</u></div>`;
                 } else {
                     navegador += `<div class="navButton" onclick="exibirListaPosts(${i})">${i}</div>`;
                 }
             }
             
+            if (pagina <= paginaMax - 3) {
+                navegador += `<div class="navButton" onclick="exibirNavegacao()">...</div>`;
+            }
+
             if (pagina <= paginaMax - 1) {
                 navegador += `<div class="navButton" onclick="exibirListaPosts(${pagina + 1})"><img src="img/nav_right.svg"></div>`;
             }
@@ -154,6 +171,17 @@
         }
     }
 
+    function exibirNavegacao() {
+        inpNavPagina.value = '';
+        navContainer.style.display = 'block';
+        navBlocker.style.display = 'block';
+    }
+
+    function esconderNavegacao() {
+        navContainer.style.display = 'none';
+        navBlocker.style.display = 'none';
+    }
+    
     function selecionarPost(idPost) {
 
         var post = listaPosts.find((x) => x.idPost == idPost);
