@@ -99,13 +99,7 @@
                 resposta.json().then(dados => {
                     console.log(dados);
                     listaPosts = dados;
-                    for (var i = 0; i < dados.length; i++) {
-                        divLista.innerHTML += `<div class="post" onclick="selecionarPost(${dados[i].idPost})">
-                                <h3>${dados[i].titulo}</h3>
-                                <p>${dados[i].textoPost}</p>
-                                <span>Criado em: ${(new Date(dados[i].dataCriacao)).toDateString()} por ${dados[i].username}</span>
-                            </div>`;
-                    }
+                    exibirListaPosts(1);
                 });
             } else {
                 throw ("Houve um erro ao obter as postagens!");
@@ -115,6 +109,50 @@
         });
     }
 
+    var itensPorPagina = 3;
+
+    function exibirListaPosts(pagina) {
+
+        divLista.innerHTML = '';
+        for (var i = (pagina - 1) * itensPorPagina; i < listaPosts.length && i < pagina * itensPorPagina; i++) {
+            divLista.innerHTML += `<div class="post" onclick="selecionarPost(${listaPosts[i].idPost})">
+                    <h3>${listaPosts[i].titulo}</h3>
+                    <p>${listaPosts[i].textoPost}</p>
+                    <span>Criado em: ${(new Date(listaPosts[i].dataCriacao)).toDateString()} por ${listaPosts[i].username}</span>
+                </div>`;
+        }
+
+        if (listaPosts.length > itensPorPagina) {
+            
+            let paginaMax = Math.ceil(listaPosts.length / itensPorPagina);
+            let navegador = '<div class="navegadorContainer">';
+                
+            if (pagina >= 3) {
+                navegador += '<div class="navButton" onclick="exibirListaPosts(1)"><img src="./img/nav_double_left.svg"></div>';
+            }
+            if (pagina >= 2) {
+                navegador += `<div class="navButton" onclick="exibirListaPosts(${pagina - 1})"><img src="./img/nav_left.svg"></div>`;
+            }
+
+            for (let i = Math.max(1, pagina - 2); i <= Math.min(pagina + 2, paginaMax); i++) {
+                if (i == pagina) {
+                    navegador += `<div class="navButton"><b>${i}</b></div>`;
+                } else {
+                    navegador += `<div class="navButton" onclick="exibirListaPosts(${i})">${i}</div>`;
+                }
+            }
+            
+            if (pagina <= paginaMax - 1) {
+                navegador += `<div class="navButton" onclick="exibirListaPosts(${pagina + 1})"><img src="img/nav_right.svg"></div>`;
+            }
+            if (pagina <= paginaMax - 2) {
+                navegador += `<div class="navButton" onclick="exibirListaPosts(${paginaMax})"><img src="./img/nav_double_right.svg"></div>`;
+            }
+
+            navegador += '</div>';
+            divLista.innerHTML += navegador;
+        }
+    }
 
     function selecionarPost(idPost) {
 

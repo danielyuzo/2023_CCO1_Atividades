@@ -16,13 +16,13 @@ function printarHeader() {
         }
         texto += `
                 <li><a href="busca.html">Busca</a></li>
-                <li onclick="logout()">Logout</li>
+                <li onclick="logout()" class="loginButton"><img src="./img/logout.svg alt="Logout"></li>
             </ul>`;
     } else {
         texto += `
                 <li><a href="cadastro.html">Cadastro</a></li>
                 <li><a href="busca.html">Busca</a></li>
-                <li onclick="exibirLogin()"><img src="./img/login.svg" alt="Login"></li>
+                <li onclick="exibirLogin()" class="loginButton"><img src="./img/login.svg" alt="Login"></li>
             </ul>`;
     }
     divHeader.innerHTML = texto

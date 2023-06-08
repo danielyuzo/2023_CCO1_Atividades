@@ -60,10 +60,17 @@ a {
 }
 
 .header li {
+    display: flex;
+    align-items: center;
     border: 1px solid white;
-    padding: 10px 20px;
+    height: 40px;
+    padding: 0px 20px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.header .loginButton {
+    padding: 0px 10px;
 }
 
 .header li:hover {

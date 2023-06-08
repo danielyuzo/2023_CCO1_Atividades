@@ -73,9 +73,10 @@ END//
 DELIMITER ;
 
 SELECT * FROM usuario;
-
-SELECT * FROM post AS p JOIN usuario AS uP ON p.fkUsuario = uP.idUsuario JOIN comentario AS c ON p.idPost = c.fkPost JOIN usuario AS uC ON c.fkUsuario = uC.idUsuario WHERE p.idPost = 1;
-
+select * from post;
+select * from categoriaPost;
+SELECT * FROM post AS p JOIN usuario AS uP ON p.fkUsuario = uP.idUsuario LEFT JOIN comentario AS c ON p.idPost = c.fkPost JOIN usuario AS uC ON c.fkUsuario = uC.idUsuario;
+select * from post;
 
 INSERT INTO usuario VALUES (null, 'batata2', sha2('senha123', 256), 'batata@gmail.com', '2023-05-25 10:02:00', 1);
 select * from usuario;
