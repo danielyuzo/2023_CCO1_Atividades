@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/dashboard.css">
-    <script src="./js/login.js"></script>
     <script src="./js/funcoes.js"></script>
     <title>Document</title>
 </head>
@@ -35,25 +34,43 @@
         S-30 580 200 580" stroke="darkturquoise" stroke-width="3" fill="none" />
     </svg> 
 
-    <div id="loginBlocker" class="blocker" onclick="esconderLogin()"></div>
-
     <!-- Header -->
     <div class="header" id="divHeader">
     </div>
 
-    <!-- Login -->
-    <div id="loginContainer" class="loginCard">
-        Nome de usuário:
-        <input id="inpNomeLogin">
-        Senha:
-        <input id="inpSenhaLogin" type="password">
-        <button onclick="entrar()">Login</button>
-        <span id="spanErroLogin"></span>
-    </div>
-
     <!-- Corpo -->
     <div class="container">
-        
+        <div class="filtros">
+            <div class="filtroCard">
+                Métrica: 
+                <select id="selMetrica" onchange="mudarMetrica()">
+                    <option value="visualizacao">Visualizações</option>
+                    <option value="comentario">Comentários</option>
+                </select>
+            </div>
+            <div class="filtroCard">
+                Agrupar por: 
+                <select id="selGrupo" onchange="mudarAgrupamento()">
+                    <option value="categoria">Categoria</option>
+                    <option value="post">Post</option>
+                    <option value="mes">Mês</option>
+                    <option value="semana">Dia da Semana</option>
+                </select>
+            </div>
+            <div class="filtroCard">
+                Período: 
+                <select id="selPeriodo" onchange="mudarPeriodo()">
+                    <option value="total">Total</option>
+                    <option value="ano">1 Ano</option>
+                    <option value="mes">1 Mês</option>
+                    <option value="semana">1 Semana</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="graficos">
+<div id="divMsg"></div>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -67,6 +84,43 @@
 
     validarSessao(false);
 
+    var metrica = 'visualizacao';
+    var agrupamento = 'categoria';
+    var periodo = 'total';
+
+    function mudarMetrica() {
+        metrica = selMetrica.value;
+        atualizarGraficos();
+    }  
+
+    function mudarAgrupamento() {
+        agrupamento = selGrupo.value;
+        atualizarGraficos();
+    }
+
+    function mudarPeriodo() {
+        periodo = selPeriodo.value;
+        atualizarGraficos();
+    }
+
+    function atualizarGraficos() {
+        fetch(`/dashboard/obterDados/${metrica}-${agrupamento}-${periodo}`)
+            .then((response) => {
+                if(response.ok) {
+                    response.json().then((resposta) => {
+                        var texto = '';
+                        for (let i = 0; i < resposta.length; i++) {
+                            texto += `${resposta[i].label} - ${resposta[i].dado}<br>`;
+                        }
+                        divMsg.innerHTML = texto;
+                    })
+                } else {
+                    console.log(response);
+                }
+            }).catch((erro)=>{
+                console.log(erro);
+            })
+    }
 
     printarHeader();
     printarFooter();

@@ -1,16 +1,10 @@
-.container {
-    width: 70%;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
+
 
 .lista {
     display: flex;
     flex-direction: column;
     width: 80%;
-    border: 1px solid white;
+    /* border: 1px solid white; */
     border-radius: 5px;
 }
 
@@ -30,7 +24,7 @@
 .post {
     display: flex;
     flex-direction:column;
-    width: 90%;
+    width: 100%;
     margin: 10px;
     padding: 10px;
     border: solid 1px white;
@@ -40,6 +34,51 @@
 #divPost {
     display: none;
     flex-direction: column;
+    width: 80%;
+}
+
+.post h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.post .visualizacoes {
+    font-size: medium;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0px 0px 0px 5px;
+    color: #444;
+    border: 1px solid #444;
+    border-radius: 3px;
+    justify-content: flex-end;
+}
+
+.post .visualizacoes img {
+    background-color: #333333;
+}
+
+#divNovoComentario {
+    display: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    width: 100%;
+}
+
+.comentario {
+    border-bottom: 1px solid white;
+    padding: 5px 5px 15px 5px;
+}
+
+.criacao {
+    font-size: small;
+    margin-bottom: 5px;
 }
 
 .botao {
@@ -48,6 +87,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.botao:hover {
+    background-color: #333333;
 }
 
 .deleteCard {

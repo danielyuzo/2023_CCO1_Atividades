@@ -26,7 +26,7 @@ app.use("/usuarios", usuarioRouter);
 app.use("/post", postRouter);
 app.use("/comentario", comentarioRouter);
 app.use("/categoria", categoriaRouter);
-app.use("./dashboard", dashboardRouter);
+app.use("/dashboard", dashboardRouter);
 
 app.listen(PORTA, function () {
     console.log(`Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar: http://localhost:${PORTA} \n

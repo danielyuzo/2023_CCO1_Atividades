@@ -188,11 +188,11 @@
 
         divPost.innerHTML = '';
         var texto = `<div class="post">
-                    <h3><span class="botao" onclick="voltar()">&lt;</span>${post.titulo} ${post.visualizacoes}</h3>
+                    <h3><span class="botao" onclick="voltar()"><img src="img/nav_left.svg" alt="Voltar"></span>${post.titulo} <div class="visualizacoes">${post.visualizacoes + 1} <img src="img/eye.svg"></div></h3>
 
                     <div id="divShowPost${idPost}" class="mostrarCard">
                         <p id="pPost${idPost}">${post.textoPost}</p>
-                        <span>Criado em: ${new Date(post.dataCriacao).toDateString()} por ${post.username}</span>`
+                        <span class="criacao">Criado em: ${new Date(post.dataCriacao).toDateString()} por ${post.username}</span>`
         if (sessionStorage.ADMIN == 1) {
             texto += `<div><button onclick="exibirEditarPost(${post.idPost})">Editar</button>
                     <button onclick="exibirApagarPost(${post.idPost})">Apagar</button></div></div>
@@ -200,10 +200,18 @@
                         <textarea id="txtPost${idPost}" rows="5" cols="50"></textarea><br>
                         <button onclick="editarPost(${idPost})">Confirmar</button>
                         <button onclick="esconderEditarPost(${idPost})">Cancelar</button>
-                    </div>
                     </div>`;
         } else {
-            texto += '</div></div>';
+            texto += '</div>';
+        }
+        if (sessionStorage.ID_USUARIO != null && sessionStorage.ID_USUARIO != undefined) {
+            texto += `<button onclick="exibirNovoComentario()">Escrever novo comentário</button></div>
+                <div id="divNovoComentario">
+                    <textarea id="txtNovoComentario" rows="5" cols="50"></textarea><br>
+                    <button onclick="cancelarNovoComentario()">Cancelar</button><button onclick="cadastrarNovoComentario(${idPost})">Comentar</button>
+                </div>`;
+        } else {
+            texto += '</div>';
         }
         divPost.innerHTML = texto;
 
@@ -216,12 +224,12 @@
             if (resposta.ok) {
                 resposta.json().then(dados => {
                     if (dados[0].textoComentario != null) {
-                        var texto = '';
+                        var texto = '<div class="post" id="divComentarios">';
                         for (var i = 0; i < dados.length; i++) {
                             texto += `<div id="comentario${dados[i].idComentario}" class="comentario">
                             <div id="divShowComentario${dados[i].idComentario}">
                             <p id="pComentario${dados[i].idComentario}">${dados[i].textoComentario}</p>
-                            <span>Criado em: ${new Date(dados[i].dataCriacao).toDateString()} por ${dados[i].username}</span>`;
+                            <span class="criacao">Criado em: ${new Date(dados[i].dataCriacao).toDateString()} por ${dados[i].username}</span>`;
                             if (dados[i].idUsuario == sessionStorage.ID_USUARIO) {
                                 texto += `<div><button onclick="exibirEditarComentario(${dados[i].idComentario})">Editar</button>
                                         <button onclick="exibirApagarComentario(${dados[i].idComentario})">Apagar</button></div></div>
@@ -231,9 +239,10 @@
                                             <button onclick="esconderEditarComentario(${dados[i].idComentario})">Cancelar</button>
                                         </div></div>`;
                             } else {
-                                texto += '</div></div>'
+                                texto += '</div></div>';
                             }
                         }
+                        texto += '</div>';
                         divPost.innerHTML += texto;
                     }
                 });
@@ -270,7 +279,48 @@
         divLista.style.display = 'flex';
     }
 
+    function exibirNovoComentario() {
+        divNovoComentario.style.display = 'block';
+        txtNovoComentario.value = '';
+    }
 
+    function cadastrarNovoComentario(idPost) {
+        var novoComentario = txtNovoComentario.value;
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+        if (idUsuario == undefined) {
+            alert('Faça login para comentar!');
+        } else {
+            fetch('comentario/cadastrar', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    postServer: idPost,
+                    textoServer: novoComentario,
+                    usuarioServer: idUsuario
+                })
+            }).then((response)=>{
+                if (response.ok) {
+                    selecionarPost(idPost);
+                } else {
+                    console.log(response);
+                }
+            }).catch((erro)=>{
+                console.log(erro);
+            });
+        }
+
+
+        
+        divNovoComentario.style.display = 'none';
+        txtNovoComentario.value = '';
+    }
+
+    function cancelarNovoComentario() {
+        divNovoComentario.style.display = 'none';
+    }
 
     function exibirEditarPost(idPost) {
         var pPost = document.getElementById('pPost' + idPost);

@@ -1,10 +1,11 @@
 var database = require("../database/config")
 
-function listar() {
-    
+function obterDados(instrucao) {
+
+    return database.executar(instrucao);
     }
 
 
 module.exports = {
-    listar,
-};
+    obterDados,
+};  
