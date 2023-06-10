@@ -34,3 +34,21 @@ function printarHeader() {
 function printarFooter() {
     divFooter.innerHTML = ``;
 }
+
+function obterCategorias() {
+    fetch("/categoria/listar/").then((resposta) => {
+        if (resposta.ok) {
+            resposta.json().then(dados => {
+                divCategorias.innerHTML = '';
+                for (var i = 0; i < dados.length; i++) {
+                    idCategorias.push(`inpCategoria${dados[i].idCategoria}`);
+                    divCategorias.innerHTML += `<input id="${idCategorias[i]}" type="checkbox" value="${dados[i].idCategoria}">${dados[i].nome}<br>`;
+                }
+            });
+        } else {
+            console.log(resposta);
+        }
+    }).catch((erro) => {
+        console.error(erro);
+    });
+}
