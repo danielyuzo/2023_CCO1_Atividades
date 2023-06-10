@@ -77,6 +77,35 @@ select * from post;
 select * from categoriaPost;
 SELECT * FROM post AS p JOIN usuario AS uP ON p.fkUsuario = uP.idUsuario LEFT JOIN comentario AS c ON p.idPost = c.fkPost JOIN usuario AS uC ON c.fkUsuario = uC.idUsuario;
 select * from post;
+select * from categoria;
+select * from comentario;
 
+
+SELECT * FROM post AS p JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria c ON c.idCategoria = cp.fkCategoria;
 INSERT INTO usuario VALUES (null, 'batata2', sha2('senha123', 256), 'batata@gmail.com', '2023-05-25 10:02:00', 1);
 select * from usuario;
+
+
+-- Visualizações por categoria
+SELECT c.nome, SUM(p.visualizacoes) AS vis FROM post AS p 
+	JOIN categoriaPost AS cp ON p.idPost = cp.fkPost 
+	JOIN categoria c ON c.idCategoria = cp.fkCategoria 
+    GROUP BY c.nome ORDER BY vis DESC;
+    
+-- posts mais visualizados
+SELECT titulo, visualizacoes FROM post ORDER BY visualizacoes DESC;
+
+-- posts mais comentados
+SELECT p.titulo, COUNT(c.idComentario) AS coms FROM post p LEFT JOIN comentario c ON p.idPost = c.fkPost GROUP BY p.titulo ORDER BY coms DESC;
+
+-- comentários por categoria
+SELECT cat.nome, COUNT(com.idComentario) AS coms FROM post AS p 
+	JOIN categoriaPost AS cp ON p.idPost = cp.fkPost 
+	JOIN categoria cat ON cat.idCategoria = cp.fkCategoria
+    LEFT JOIN comentario com ON com.fkPost = p.idPost
+    GROUP BY cat.nome ORDER BY coms DESC;
+    
+-- quantidade de posts e visualizações por mês
+SELECT MONTH(dataCriacao) AS mes, COUNT(idPost) AS posts, SUM(visualizacoes) AS vis FROM post GROUP BY mes; 
+    
+    select * from comentario;

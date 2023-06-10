@@ -193,7 +193,7 @@
                     <div id="divShowPost${idPost}" class="mostrarCard">
                         <p id="pPost${idPost}">${post.textoPost}</p>
                         <span>Criado em: ${new Date(post.dataCriacao).toDateString()} por ${post.username}</span>`
-        if (sessionStorage.ADMIN) {
+        if (sessionStorage.ADMIN == 1) {
             texto += `<div><button onclick="exibirEditarPost(${post.idPost})">Editar</button>
                     <button onclick="exibirApagarPost(${post.idPost})">Apagar</button></div></div>
                     <div id="divEditPost${idPost}" class="editarCard">

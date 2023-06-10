@@ -15,7 +15,7 @@ router.get("/listarUltimoPost/:idUsuario", function (req, res) {
     postController.listarUltimoPost(req, res);
 });
 
-router.post("/visualizar/", function (req, res) {
+router.put("/visualizar", function (req, res) {
     postController.visualizar(req, res);
 });
 

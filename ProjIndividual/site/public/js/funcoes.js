@@ -1,5 +1,7 @@
-function validarSessao() {
-    if (sessionStorage.ADMIN != 1) {
+function validarSessao(adm) {
+    if (adm && sessionStorage.ADMIN != 1) {
+        window.location = './index.html';
+    } else if (!adm && sessionStorage.ID_USUARIO == undefined) {
         window.location = './index.html';
     }
 }
@@ -16,7 +18,7 @@ function printarHeader() {
         }
         texto += `
                 <li><a href="busca.html">Busca</a></li>
-                <li onclick="logout()" class="loginButton"><img src="./img/logout.svg alt="Logout"></li>
+                <li onclick="logout()" class="loginButton"><img src="./img/logout.svg" alt="Logout"></li>
             </ul>`;
     } else {
         texto += `
