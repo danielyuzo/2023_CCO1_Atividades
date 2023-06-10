@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./js/funcoes.js"></script>
     <title>Document</title>
 </head>
@@ -69,7 +70,10 @@
         </div>
 
         <div class="graficos">
-<div id="divMsg"></div>
+            <canvas id="canvBarra"></canvas>
+            <div class="graficoDonut">
+                <canvas id="canvDonut"></canvas>
+            </div>
         </div>
     </div>
 
@@ -87,18 +91,30 @@
     var metrica = 'visualizacao';
     var agrupamento = 'categoria';
     var periodo = 'total';
+    var meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    var dias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    var updateTimeout;
 
     function mudarMetrica() {
+        if (updateTimeout !== undefined) {
+            clearTimeout(updateTimeout);
+        }
         metrica = selMetrica.value;
         atualizarGraficos();
     }  
 
     function mudarAgrupamento() {
+        if (updateTimeout !== undefined) {
+            clearTimeout(updateTimeout);
+        }
         agrupamento = selGrupo.value;
         atualizarGraficos();
     }
 
     function mudarPeriodo() {
+        if (updateTimeout !== undefined) {
+            clearTimeout(updateTimeout);
+        }
         periodo = selPeriodo.value;
         atualizarGraficos();
     }
@@ -108,11 +124,45 @@
             .then((response) => {
                 if(response.ok) {
                     response.json().then((resposta) => {
-                        var texto = '';
+                        // var texto = '';
+                        graficoBarra.data.datasets[0].data = [];
+                        graficoBarra.data.labels = [];
+                        graficoDonut.data.datasets[0].data = [];
+                        graficoDonut.data.labels = [];
                         for (let i = 0; i < resposta.length; i++) {
-                            texto += `${resposta[i].label} - ${resposta[i].dado}<br>`;
+                            graficoBarra.data.datasets[0].data.push(resposta[i].dado);
+                            graficoDonut.data.datasets[0].data.push(resposta[i].dado);
+                            if (agrupamento == 'mes') {
+                                graficoBarra.data.labels.push(meses[resposta[i].label - 1]);
+                                graficoDonut.data.labels.push(meses[resposta[i].label - 1]);
+                            } else if (agrupamento == 'semana') {
+                                graficoBarra.data.labels.push(dias[resposta[i].label - 1]);
+                                graficoDonut.data.labels.push(dias[resposta[i].label - 1]);
+                            } else {
+                                graficoBarra.data.labels.push(resposta[i].label);
+                                graficoDonut.data.labels.push(resposta[i].label);
+                            }
                         }
-                        divMsg.innerHTML = texto;
+                        if (agrupamento == 'categoria') {
+                                graficoBarra.options.scales.xAxes.title.text = 'Categoria';
+                        } else if (agrupamento == 'post') {
+                            graficoBarra.options.scales.xAxes.title.text = 'Post';
+                        } else if (agrupamento == 'mes') {
+                            graficoBarra.options.scales.xAxes.title.text = 'Mês';
+                        } else {
+                            graficoBarra.options.scales.xAxes.title.text = 'Dia da Semana';
+                        }
+
+                        if (metrica == 'visualizacao') {
+                            graficoBarra.options.scales.yAxes.title.text = 'Visualizações';
+                        } else {
+                            graficoBarra.options.scales.yAxes.title.text = 'Comentários';
+                        }
+
+                        graficoBarra.update();
+                        graficoDonut.update();
+
+                        updateTimeout = setTimeout(() => {atualizarGraficos();}, 5000);
                     })
                 } else {
                     console.log(response);
@@ -122,6 +172,85 @@
             })
     }
 
+    var contextoBarra = document.getElementById('canvBarra').getContext('2d');
+        contextoBarra.canvas.width = 300;
+        contextoBarra.canvas.height = 100;
+    var graficoBarra = new Chart(
+            contextoBarra,
+            {
+                type: 'bar',
+                data: {
+                    datasets: [{
+                        label: '',
+                        type: 'bar',
+                        yAxisID: 'yAxes',
+                        xAxisID: 'xAxes',
+                        borderColor: 'white',
+                        backgroundColor: 'white',
+                    }],
+                },
+                options: {
+                    scales: {
+                        xAxes: {
+                            title: {
+                                display: true,
+                                text: '',
+                                color: 'white'
+                            },
+                            distribution: 'series',
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            barPercentage: 1,
+                            categoryPercentage: 1
+                        },
+                        yAxes: {
+                            title: {
+                                display: true,
+                                text: '',
+                                color: 'white'
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Chave'
+                            },
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 0
+                    }
+                }
+            }
+        );
+
+        var contextoDonut = document.getElementById('canvDonut').getContext('2d');
+        contextoDonut.canvas.width = 50;
+        contextoDonut.canvas.height = 50;
+        var graficoDonut = new Chart(
+            contextoDonut,
+            {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [],
+                        label: 'Chave',
+                        type: 'doughnut',
+                        backgroundColor: ['darkblue', 'darkred', 'darkgreen', 'indigo', 'chocolate', 'salmon', 'steelblue', 'springgreen', 'sienna', 'gray', 'khaki', 'darkturquoise'],
+                    }],
+                },
+                options: {
+                    animation: {
+                        duration: 0
+                    }
+                }
+            }
+        );
+
+
+    atualizarGraficos();
     printarHeader();
     printarFooter();
 

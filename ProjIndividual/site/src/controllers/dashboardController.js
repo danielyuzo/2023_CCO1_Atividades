@@ -40,12 +40,14 @@ function obterDados(req, res) {
             instrucao[0] = 'SELECT MONTH(p.dataCriacao) AS label, ';
             instrucao[1] = 'FROM post AS p JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria ';
             instrucao[3] = 'GROUP BY label ';
+            instrucao[4] = 'ORDER BY label ASC';
             break;
 
         case 'semana':
             instrucao[0] = 'SELECT DAYOFWEEK(p.dataCriacao) AS label, ';
             instrucao[1] = 'FROM post AS p JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria ';
             instrucao[3] = 'GROUP BY label ';
+            instrucao[4] = 'ORDER BY label ASC';
             break;
 
         default:
@@ -56,13 +58,13 @@ function obterDados(req, res) {
     switch (metrica) {
         case 'visualizacao':
             instrucao[0] += 'SUM(p.visualizacoes) AS dado ';
-            instrucao[4] = 'ORDER BY dado DESC';
+            instrucao[4] ||= 'ORDER BY dado DESC';
             break;
             
         case 'comentario':
             instrucao[0] += 'COUNT(com.idComentario) AS dado ';
             instrucao[1] += 'LEFT JOIN comentario AS com ON com.fkPost = p.idPost ';
-            instrucao[4] = 'ORDER BY dado DESC';
+            instrucao[4] ||= 'ORDER BY dado DESC';
             break;
         
         default:
@@ -96,6 +98,19 @@ function obterDados(req, res) {
     dashboardModel.obterDados(instrucao.join(''))
         .then(function (resultado) {
             if (resultado.length > 0) {
+                if (agrupamento == 'mes') {
+                    for (var i = 1; i <= 12; i++) {
+                        if (resultado[i-1] == undefined || resultado[i-1].label > i) {
+                            resultado.splice(i-1, 0, {label: i, dado: 0});
+                        }
+                    }
+                } else if (agrupamento == 'semana') {
+                    for (var i = 1; i <= 7; i++) {
+                        if (resultado[i-1] == undefined || resultado[i-1].label > i) {
+                            resultado.splice(i-1, 0, {label: i, dado: 0});
+                        }
+                    }
+                }
                 res.status(200).json(resultado);
             } else {
                 res.status(204).send("Nenhum resultado encontrado!")

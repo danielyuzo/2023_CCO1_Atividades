@@ -59,12 +59,12 @@
 }
 
 .post .visualizacoes img {
-    background-color: #333333;
+    background-color: var(--hoverColor);
 }
 
 #divNovoComentario {
     display: none;
-    border: 1px solid white;
+    border: 1px solid var(--mainColor);
     border-radius: 10px;
     padding: 10px;
     margin: 10px;
@@ -72,7 +72,7 @@
 }
 
 .comentario {
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid var(--mainColor);
     padding: 5px 5px 15px 5px;
 }
 
@@ -87,13 +87,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid white;
+    border: 1px solid var(--mainColor);
     border-radius: 5px;
     cursor: pointer;
 }
 
 .botao:hover {
-    background-color: #333333;
+    background-color: var(--hoverColor);
 }
 
 .deleteCard {
@@ -105,9 +105,9 @@
     position: fixed;
     right: 40%;
     top: 40%;
-    border: 1px solid white;
+    border: 1px solid var(--mainColor);
     border-radius:5px;
-    background-color: black;
+    background-color: var(--backColor);
 }
 
 .editarCard {
@@ -125,7 +125,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid white;
+    border: 1px solid var(--mainColor);
     width: fit-content;
     align-self: center;
     border-radius: 5px;
@@ -139,13 +139,13 @@
     /* border: 1px solid white; */
     height: 30px;
     width: 30px;
-    border-left: 1px solid white;
-    border-right: 1px solid white;
+    border-left: 1px solid var(--mainColor);
+    border-right: 1px solid var(--mainColor);
     cursor:pointer;
 }
 
 .navButton:hover {
-    background-color: #333333;
+    background-color: var(--hoverColor);
 }
 
 .navCard {
@@ -157,9 +157,9 @@
     position: fixed;
     left: 45%;
     top: 40%;
-    border: 1px solid white;
+    border: 1px solid var(--mainColor);
     border-radius:5px;
-    background-color: black;
+    background-color: var(--backColor);
 }
 
 .navCard input {

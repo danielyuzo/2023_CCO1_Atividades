@@ -18,6 +18,7 @@ function printarHeader() {
         }
         texto += `
                 <li><a href="busca.html">Busca</a></li>
+                <li><a href="dashboard.html">Dados</a></li>
                 <li onclick="logout()" class="loginButton"><img src="./img/logout.svg" alt="Logout"></li>
             </ul>`;
     } else {
