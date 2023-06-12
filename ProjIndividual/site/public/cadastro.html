@@ -56,12 +56,22 @@
     <div class="formCadastro">
         Nome de usuário:
         <input id="inpNome">
+        <div id="erroNome" class="erro">Favor inserir um nome de usuário</div>
         E-mail:
         <input id="inpEmail">
+        <div id="erroEmail" class="erro">Favor inserir um e-mail válido</div>
         Senha:
         <input id="inpSenha1" type="password">
+        <div id="erroSenha" class="erro">Favor inserir uma senha válida<br>
+        <ul>
+            <li>No mínimo 6 caracteres</li>
+            <li>Pelo menos 1 letra minúscula</li>
+            <li>Pelo menos 1 letra maiúscula</li>
+            <li>Pelo menos 1 número</li>
+        </ul></div>
         Digite a senha novamente:
         <input id="inpSenha2" type="password">
+        <div id="erroSenhaConf" class="erro">As senhas não são iguais</div>
         <button onclick="validarEntradas()">Cadastrar</button>
     </div>
 
@@ -79,25 +89,38 @@
 
         if (nome.length < 4) {
             inpNome.style.border = '1px solid red';
+            erroNome.style.display = 'block';
             validado = false;
         } else {
             inpNome.style.border = '1px solid black';
+            erroNome.style.display = 'none';
         }
 
         if (email.length < 10 || email.match(/\S{3,}@\S{2,}\.\S{2,}/) == null) {
             inpEmail.style.border = '1px solid red';
+            erroEmail.style.display = 'block';
             validado = false;
         } else {
             inpEmail.style.border = '1px solid black';
+            erroEmail.style.display = 'none';
         }
 
-        if (senha1.length < 6 || senha1.search(/[a-z]+/) == -1 || senha1.search(/[A-Z]+/) == -1 || senha1.search(/[0-9]+/) == -1 || senha1 != senha2) {
+        if (senha1.length < 6 || senha1.search(/[a-z]+/) == -1 || senha1.search(/[A-Z]+/) == -1 || senha1.search(/[0-9]+/) == -1) {
             inpSenha1.style.border = '1px solid red';
-            inpSenha2.style.border = '1px solid red';
+            erroSenha.style.display = 'block';
             validado = false;
         } else {
             inpSenha1.style.border = '1px solid black';
+            erroSenha.style.display = 'none';
+        }
+
+        if (senha1 != senha2) {
+            inpSenha2.style.border = '1px solid red';
+            erroSenhaConf.style.display = 'block';
+            validado = false
+        } else {
             inpSenha2.style.border = '1px solid black';
+            erroSenhaConf.style.display = 'none';
         }
 
         if (validado) {

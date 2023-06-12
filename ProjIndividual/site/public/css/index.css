@@ -17,8 +17,23 @@
     border-radius: 5px;
 }
 
-.data li {
+.data h4 {
+    margin: 10px auto 0px auto;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.data ul {
     list-style: none;
+    padding-left: 20px;
+}
+
+.data li {
+    margin: 5px 0px;
+}
+
+.listaDatas {
+    display: none;
 }
 
 .post {
