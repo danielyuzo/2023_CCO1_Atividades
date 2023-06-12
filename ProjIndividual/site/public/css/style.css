@@ -1,13 +1,15 @@
 :root {
     --backColor: black;
+    --fontColor: white;
     --mainColor: white;
     --accentColor: darkTurquoise;
     --hoverColor: #333333;
+    --errorColor: red;
 }
 
 body {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: var(--mainColor);
+    color: var(--fontColor);
     background-color: var(--backColor);
     margin: 0px;
 }
@@ -70,7 +72,7 @@ body {
 }
 
 a {
-    color: var(--mainColor);
+    color: var(--fontColor);
     text-decoration: none;
 }
 
@@ -115,7 +117,7 @@ a {
 }
 
 .loginCard span {
-    color: red;
+    color: var(--errorColor);
     font-size: small;
 }
 

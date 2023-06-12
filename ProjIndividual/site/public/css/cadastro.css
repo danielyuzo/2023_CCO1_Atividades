@@ -19,5 +19,5 @@
 .erro {
     display: none;
     font-size: small;
-    color: red;
+    color: var(--errorColor);
 }
