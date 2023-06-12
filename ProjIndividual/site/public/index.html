@@ -84,6 +84,7 @@
 <script>
 
     var listaPosts = [];
+    var listaFiltrada = [];
     var meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
     function atualizarLista() {
@@ -101,6 +102,11 @@
                 resposta.json().then(dados => {
                     console.log(dados);
                     listaPosts = dados;
+                    for (let i = 0; i < listaPosts.length; i++) {
+                        listaPosts[i].dataCriacao = new Date(listaPosts[i].dataCriacao);
+                        listaPosts[i].dataEdicao = new Date(listaPosts[i].dataEdicao);
+                    }
+                    listaFiltrada = listaPosts;
                     exibirListaPosts(1);
                     atualizarDatas();
                 });
@@ -119,17 +125,17 @@
         esconderNavegacao();
 
         divLista.innerHTML = '';
-        for (var i = (pagina - 1) * itensPorPagina; i < listaPosts.length && i < pagina * itensPorPagina; i++) {
-            divLista.innerHTML += `<div class="post" onclick="selecionarPost(${listaPosts[i].idPost})">
-                    <h3>${listaPosts[i].titulo}</h3>
-                    <p>${listaPosts[i].textoPost}</p>
-                    <span>Criado em: ${(new Date(listaPosts[i].dataCriacao)).toDateString()} por ${listaPosts[i].username}</span>
+        for (var i = (pagina - 1) * itensPorPagina; i < listaFiltrada.length && i < pagina * itensPorPagina; i++) {
+            divLista.innerHTML += `<div class="post" onclick="selecionarPost(${listaFiltrada[i].idPost})">
+                    <h3>${listaFiltrada[i].titulo}</h3>
+                    <p>${listaFiltrada[i].textoPost}</p>
+                    <span>Criado em: ${listaFiltrada[i].dataCriacao.toDateString()} por ${listaFiltrada[i].username}</span>
                 </div>`;
         }
 
-        if (listaPosts.length > itensPorPagina) {
+        if (listaFiltrada.length > itensPorPagina) {
             
-            let paginaMax = Math.ceil(listaPosts.length / itensPorPagina);
+            let paginaMax = Math.ceil(listaFiltrada.length / itensPorPagina);
             let navegador = '<div class="navegadorContainer">';
                 
             if (pagina >= 3) {
@@ -187,34 +193,47 @@
         let terminarAno = false;
         
         for (let i = 0; i < listaPosts.length; i++) {
-            let data = new Date(listaPosts[i].dataCriacao);
-            var ano = data.getFullYear();
-            var mes = data.getMonth();
+
+            var ano = listaPosts[i].dataCriacao.getFullYear();
+            var mes = listaPosts[i].dataCriacao.getMonth();
+
             if (i == 0 || anos.indexOf(ano) == -1) {
                 anos.push(ano);
-                texto += `<li><span onclick="mostrarLista(${ano});"><img id="img${ano}" src="img/chevron_right.svg">${ano}</span><ul class="listaDatas" id="lista${ano}">`;
                 if (i != 0) {
                     terminarAno = true;
+                } else {
+                    texto += `<li>
+                        <span onclick="mostrarLista(${ano});"><img id="img${ano}" src="img/chevron_right.svg">${ano}</span>
+                        <ul class="listaDatas" id="lista${ano}">`;
                 }
             } 
 
             if (mesAnos.indexOf(mes + '/' + ano) == -1) {
                 mesAnos.push(mes + '/' + ano);
+
                 if (postCount != -1) {
                     texto += `(${postCount})</li>`;
                 }
 
-                texto += `<li onclick="filtrarLista('${(mes+1) + '/' + ano}')">${meses[mes]} `;
+                if (!terminarAno) {
+                    texto += `<li onclick="filtrarLista('${(mes+1) + '/' + ano}')">${meses[mes]} `;
+                }
+
                 postCount = 1;
+
             } else {
                 postCount++;
-            }         
+            }
 
             if (terminarAno) {
-                texto += '</ul></li>';
+                texto += `</ul></li>
+                    <li><span onclick="mostrarLista(${ano});"><img id="img${ano}" src="img/chevron_right.svg">${ano}</span>
+                            <ul class="listaDatas" id="lista${ano}">
+                            <li onclick="filtrarLista('${(mes+1) + '/' + ano}')">${meses[mes]} `;
                 terminarAno = false;
             }
         }
+        
         texto += `(${postCount})</li>`;
         texto += '</ul></li>';
         divData.innerHTML = texto;
@@ -233,7 +252,12 @@
     }
 
     function filtrarLista(filtro) {
-        alert('Filtro: ' + filtro);
+        if (filtro == '') {
+            listaFiltrada = listaPosts;
+        } else {
+            listaFiltrada = listaPosts.filter((a) => {return filtro == ((a.dataCriacao.getMonth() + 1) + '/' + a.dataCriacao.getFullYear())});
+        }
+        exibirListaPosts(1);
     }
     
     function selecionarPost(idPost) {
@@ -246,7 +270,7 @@
 
                     <div id="divShowPost${idPost}" class="mostrarCard">
                         <p id="pPost${idPost}">${post.textoPost}</p>
-                        <span class="criacao">Criado em: ${new Date(post.dataCriacao).toDateString()} por ${post.username}</span>`
+                        <span class="criacao">Criado em: ${post.dataCriacao.toDateString()} por ${post.username}</span>`
         if (sessionStorage.ADMIN == 1) {
             texto += `<div><button onclick="exibirEditarPost(${post.idPost})">Editar</button>
                     <button onclick="exibirApagarPost(${post.idPost})">Apagar</button></div></div>

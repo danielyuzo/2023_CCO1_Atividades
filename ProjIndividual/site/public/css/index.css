@@ -28,8 +28,13 @@
     padding-left: 20px;
 }
 
-.data li {
+.data ul li {
     margin: 5px 0px;
+    cursor: pointer;
+}
+
+.data li ul li:hover {
+    text-decoration: underline;
 }
 
 .listaDatas {
