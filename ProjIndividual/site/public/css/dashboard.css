@@ -1,25 +1,46 @@
-.filtros {
-    width: 30%;
+.containerDash {
+    width: 70%;
+    margin: auto;
     display: flex;
     flex-direction: column;
+    align-items: center;
+}
+
+.filtros {
+    width: 60%;
+    display: flex;
+    justify-content: center;
     border: 1px solid var(--mainColor);
     border-radius: 5px;
+    padding: 10px;
 }
 
 .filtroCard {
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid var(--mainColor);
+    width: 30%;
+    padding: 10px;
+    border-left: 1px solid var(--mainColor);
+    border-right: 1px solid var(--mainColor);
 }
 
 .graficos {
-    width: 65%;
-}
-
-canvas {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 20px;
     width: 100%;
 }
 
-.graficoDonut {
+.graficoBarra {
     width: 60%;
+}
+
+.graficoDonut {
+    width: 40%;
+}
+
+canvas {
+    /* background-color: var(--hoverColor); */
+    border-radius: 25px;
 }

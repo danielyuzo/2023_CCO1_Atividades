@@ -40,7 +40,7 @@
     </div>
 
     <!-- Corpo -->
-    <div class="container">
+    <div class="containerDash">
         <div class="filtros">
             <div class="filtroCard">
                 Métrica: 
@@ -70,7 +70,9 @@
         </div>
 
         <div class="graficos">
-            <canvas id="canvBarra"></canvas>
+            <div class="graficoBarra">
+                <canvas id="canvBarra"></canvas>
+            </div>
             <div class="graficoDonut">
                 <canvas id="canvDonut"></canvas>
             </div>
@@ -94,6 +96,10 @@
     var meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     var dias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
     var updateTimeout;
+
+    selMetrica.value = metrica;
+    selGrupo.value = agrupamento;
+    selPeriodo.value = periodo;
 
     function mudarMetrica() {
         if (updateTimeout !== undefined) {
@@ -124,14 +130,23 @@
             .then((response) => {
                 if(response.ok) {
                     response.json().then((resposta) => {
-                        // var texto = '';
+                        
                         graficoBarra.data.datasets[0].data = [];
                         graficoBarra.data.labels = [];
+                        let tituloBarra = '';
                         graficoDonut.data.datasets[0].data = [];
                         graficoDonut.data.labels = [];
+                        let tituloDonut = '';
+
+                        let somaTotal = 0;
+
+                        for (let i = 0; i < resposta.length; i++) {
+                            somaTotal += Number(resposta[i].dado);
+                        }
+
                         for (let i = 0; i < resposta.length; i++) {
                             graficoBarra.data.datasets[0].data.push(resposta[i].dado);
-                            graficoDonut.data.datasets[0].data.push(resposta[i].dado);
+                            graficoDonut.data.datasets[0].data.push((resposta[i].dado * 100 / somaTotal).toFixed(1));
                             if (agrupamento == 'mes') {
                                 graficoBarra.data.labels.push(meses[resposta[i].label - 1]);
                                 graficoDonut.data.labels.push(meses[resposta[i].label - 1]);
@@ -143,21 +158,42 @@
                                 graficoDonut.data.labels.push(resposta[i].label);
                             }
                         }
+
                         if (agrupamento == 'categoria') {
-                                graficoBarra.options.scales.xAxes.title.text = 'Categoria';
+                            graficoBarra.options.scales.xAxes.title.text = 'Categoria';
+                            tituloBarra += 'por Categoria';
                         } else if (agrupamento == 'post') {
                             graficoBarra.options.scales.xAxes.title.text = 'Post';
+                            tituloBarra += 'por Post';
                         } else if (agrupamento == 'mes') {
                             graficoBarra.options.scales.xAxes.title.text = 'Mês';
+                            tituloBarra += 'por Mês';
                         } else {
                             graficoBarra.options.scales.xAxes.title.text = 'Dia da Semana';
+                            tituloBarra += 'por Dia da Semana';
                         }
 
                         if (metrica == 'visualizacao') {
                             graficoBarra.options.scales.yAxes.title.text = 'Visualizações';
+                            tituloBarra = 'de Visualizações ' + tituloBarra;
                         } else {
                             graficoBarra.options.scales.yAxes.title.text = 'Comentários';
+                            tituloBarra = 'de Comentários ' + tituloBarra;
                         }
+
+                        if (periodo == 'ano') {
+                            tituloBarra += ' no último ano';
+                        } else if (periodo == 'mes') {
+                            tituloBarra += ' no último mês';
+                        } else if (periodo == 'semana') {
+                            tituloBarra += ' na última semana';
+                        }
+
+                        tituloDonut = 'Porcentagem ' + tituloBarra;
+                        tituloBarra = 'Quantidade ' + tituloBarra;
+
+                        graficoBarra.options.plugins.title.text = tituloBarra;
+                        graficoDonut.options.plugins.title.text = tituloDonut;
 
                         graficoBarra.update();
                         graficoDonut.update();
@@ -174,7 +210,7 @@
 
     var contextoBarra = document.getElementById('canvBarra').getContext('2d');
         contextoBarra.canvas.width = 300;
-        contextoBarra.canvas.height = 100;
+        contextoBarra.canvas.height = 150;
     var graficoBarra = new Chart(
             contextoBarra,
             {
@@ -185,17 +221,34 @@
                         type: 'bar',
                         yAxisID: 'yAxes',
                         xAxisID: 'xAxes',
-                        borderColor: 'white',
-                        backgroundColor: 'white',
+                        borderColor: 'darkturquoise',
+                        backgroundColor: 'darkturquoise',
                     }],
                 },
                 options: {
+                    backgroundColor: 'white',
+                    plugins: {
+                        title: {
+                            text: '',
+                            color: 'white',
+                            display: true
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
                     scales: {
                         xAxes: {
                             title: {
                                 display: true,
                                 text: '',
-                                color: 'white'
+                                color: 'rgb(100,100,100)'
+                            },
+                            grid: {
+                                color: 'rgba(255,255,255,0)',
+                            },
+                            border: {
+                                color: 'white',
                             },
                             distribution: 'series',
                             ticks: {
@@ -208,7 +261,13 @@
                             title: {
                                 display: true,
                                 text: '',
-                                color: 'white'
+                                color: 'rgb(100,100,100)'
+                            },
+                            grid: {
+                                color: 'rgb(100,100,100)',
+                            },
+                            border: {
+                                color: 'white',
                             },
                             scaleLabel: {
                                 display: true,
@@ -239,9 +298,17 @@
                         label: 'Chave',
                         type: 'doughnut',
                         backgroundColor: ['darkblue', 'darkred', 'darkgreen', 'indigo', 'chocolate', 'salmon', 'steelblue', 'springgreen', 'sienna', 'gray', 'khaki', 'darkturquoise'],
+                        borderColor: 'gray',
                     }],
                 },
                 options: {
+                    plugins: {
+                        title: {
+                            text: '',
+                            color: 'white',
+                            display: true
+                        },
+                    },
                     animation: {
                         duration: 0
                     }
