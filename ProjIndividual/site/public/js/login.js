@@ -1,6 +1,7 @@
 function exibirLogin() {
     loginContainer.style.display = 'flex';
     loginBlocker.style.display = 'block';
+    inpNomeLogin.focus();
 }
 
 function esconderLogin() {

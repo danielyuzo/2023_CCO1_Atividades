@@ -22,13 +22,13 @@ CREATE TABLE post(
 );
 
 CREATE TABLE comentario(
+    fkPost INT NOT NULL,
+    FOREIGN KEY (fkPost) REFERENCES post(idPost) ON DELETE CASCADE,
     idComentario INT PRIMARY KEY AUTO_INCREMENT,
     textoComentario VARCHAR(500),
     dataCriacao DATETIME,
     dataEdicao DATETIME,
-	fkPost INT NOT NULL,
-    FOREIGN KEY (fkPost) REFERENCES post(idPost) ON DELETE CASCADE,
-    fkUsuario INT NOT NULL,
+	fkUsuario INT NOT NULL,
     FOREIGN KEY (fkUsuario) REFERENCES usuario(idUsuario) ON DELETE CASCADE
 );
 

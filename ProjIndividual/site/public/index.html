@@ -177,6 +177,7 @@
         inpNavPagina.value = '';
         navContainer.style.display = 'block';
         navBlocker.style.display = 'block';
+        inpNavPagina.focus();
     }
 
     function esconderNavegacao() {
@@ -233,7 +234,7 @@
                 terminarAno = false;
             }
         }
-        
+
         texto += `(${postCount})</li>`;
         texto += '</ul></li>';
         divData.innerHTML = texto;
@@ -351,7 +352,7 @@
     }
 
     function voltar() {
-        atualizarLista();
+        // atualizarLista();
         divPost.innerHTML = '';
         divPost.style.display = 'none';
         divLista.style.display = 'flex';
@@ -360,6 +361,7 @@
     function exibirNovoComentario() {
         divNovoComentario.style.display = 'block';
         txtNovoComentario.value = '';
+        txtNovoComentario.focus();
     }
 
     function cadastrarNovoComentario(idPost) {
@@ -409,6 +411,7 @@
         divEditPost.style.display = 'block';
         divShowPost.style.display = 'none';
         textArea.value = pPost.innerHTML;
+        textArea.focus();
     }
 
     function editarPost(idPost) {
@@ -501,6 +504,7 @@
         divEditComentario.style.display = 'block';
         divShowComentario.style.display = 'none';
         textArea.value = pComentario.innerHTML;
+        textArea.focus();
     }
 
     function editarComentario(idComentario) {
