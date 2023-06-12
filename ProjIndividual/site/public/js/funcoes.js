@@ -39,7 +39,7 @@ function obterCategorias() {
     fetch("/categoria/listar/").then((resposta) => {
         if (resposta.ok) {
             resposta.json().then(dados => {
-                divCategorias.innerHTML = '';
+                divCategorias.innerHTML = 'Categorias<br>';
                 for (var i = 0; i < dados.length; i++) {
                     idCategorias.push(`inpCategoria${dados[i].idCategoria}`);
                     divCategorias.innerHTML += `<input id="${idCategorias[i]}" type="checkbox" value="${dados[i].idCategoria}">${dados[i].nome}<br>`;

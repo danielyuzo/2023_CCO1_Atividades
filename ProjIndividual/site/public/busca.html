@@ -22,7 +22,7 @@
         L145 325 
         Q130 340 145 370 
         S230 580 0 580" stroke="darkturquoise" stroke-width="3" fill="none" />
-    </svg> 
+    </svg>
     <svg height="600" width="200" class="svgRight">
         <path d="M200 0 
         Q60 0 100 145 
@@ -33,7 +33,7 @@
         L55 325 
         Q70 340 55 370 
         S-30 580 200 580" stroke="darkturquoise" stroke-width="3" fill="none" />
-    </svg> 
+    </svg>
 
     <div id="loginBlocker" class="blocker" onclick="esconderLogin()"></div>
     <div id="deleteBlocker" class="blocker"></div>
@@ -63,17 +63,21 @@
     <!-- Corpo -->
     <div class="containerBusca">
         <div class="busca">
-            Título: <input id="inpTitulo" type="text">
-            Categorias: <div id="divCategorias">
-            </div>
+            <div id="divBusca">
+                Título: <input id="inpTitulo" type="text">
+                Período:
+                <span>De: <input id="inpDataMin" type="date">
+                Até: <input id="inpDataMax" type="date"></span>
 
-            Período:
-            De: <input id="inpDataMin" type="date">
-            Até: <input id="inpDataMax" type="date">
-            <button onclick="buscarPosts()">Buscar</button>
+                
+                <button onclick="buscarPosts()">Buscar</button>
+            </div>
+            <div id="divCategorias">
+                Categorias:
+            </div>
         </div>
-        <div id="divLista" class="lista"></div>
-        <div id="divPost"></div>
+    <div id="divLista" class="lista"></div>
+    <div id="divPost"></div>
     </div>
 
     <div id="deleteContainer" class="deleteCard">
@@ -135,10 +139,10 @@
         }
 
         if (listaPosts.length > itensPorPagina) {
-            
+
             let paginaMax = Math.ceil(listaPosts.length / itensPorPagina);
             let navegador = '<div class="navegadorContainer">';
-                
+
             if (pagina >= 3) {
                 navegador += '<div class="navButton" onclick="exibirListaPosts(1)"><img src="./img/nav_double_left.svg"></div>';
             }
@@ -157,7 +161,7 @@
                     navegador += `<div class="navButton" onclick="exibirListaPosts(${i})">${i}</div>`;
                 }
             }
-            
+
             if (pagina <= paginaMax - 3) {
                 navegador += `<div class="navButton" onclick="exibirNavegacao()">...</div>`;
             }
@@ -184,7 +188,7 @@
         navContainer.style.display = 'none';
         navBlocker.style.display = 'none';
     }
-    
+
     function selecionarPost(idPost) {
 
         var post = listaPosts.find((x) => x.idPost == idPost);
@@ -304,19 +308,19 @@
                     textoServer: novoComentario,
                     usuarioServer: idUsuario
                 })
-            }).then((response)=>{
+            }).then((response) => {
                 if (response.ok) {
                     selecionarPost(idPost);
                 } else {
                     console.log(response);
                 }
-            }).catch((erro)=>{
+            }).catch((erro) => {
                 console.log(erro);
             });
         }
 
 
-        
+
         divNovoComentario.style.display = 'none';
         txtNovoComentario.value = '';
     }
