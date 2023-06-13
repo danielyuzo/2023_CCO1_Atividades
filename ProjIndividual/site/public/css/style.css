@@ -63,6 +63,15 @@ body {
     border-bottom-right-radius: 30px;
 }
 
+.header .icone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--accentColor);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: large;
+}
+
 .header ul {
     display: flex;
     list-style: none;
