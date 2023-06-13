@@ -69,6 +69,10 @@ function visualizar(req, res) {
     }
 }
 
+function buscarPosts(req, res) {
+    var titulo = req.params.titulo;
+}
+
 function cadastrar(req, res) {
     // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
     var titulo = req.body.tituloServer;
