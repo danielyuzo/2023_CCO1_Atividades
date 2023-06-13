@@ -128,7 +128,7 @@
         for (var i = (pagina - 1) * itensPorPagina; i < listaFiltrada.length && i < pagina * itensPorPagina; i++) {
             divLista.innerHTML += `<div class="post" onclick="selecionarPost(${listaFiltrada[i].idPost})">
                     <h3>${listaFiltrada[i].titulo}</h3>
-                    <p>${listaFiltrada[i].textoPost}</p>
+                    <p>${listaFiltrada[i].textoPost.slice(0,400)}...</p>
                     <span>Criado em: ${listaFiltrada[i].dataCriacao.toDateString()} por ${listaFiltrada[i].username}</span>
                 </div>`;
         }
@@ -276,7 +276,7 @@
             texto += `<div><button onclick="exibirEditarPost(${post.idPost})">Editar</button>
                     <button onclick="exibirApagarPost(${post.idPost})">Apagar</button></div></div>
                     <div id="divEditPost${idPost}" class="editarCard">
-                        <textarea id="txtPost${idPost}" rows="5" cols="50"></textarea><br>
+                        <textarea id="txtPost${idPost}" rows="10" cols="80"></textarea><br>
                         <button onclick="editarPost(${idPost})">Confirmar</button>
                         <button onclick="esconderEditarPost(${idPost})">Cancelar</button>
                     </div>`;
@@ -349,6 +349,7 @@
         });
         divLista.style.display = 'none';
         divPost.style.display = 'flex';
+        divData.style.display = 'none';
     }
 
     function voltar() {
@@ -356,6 +357,7 @@
         divPost.innerHTML = '';
         divPost.style.display = 'none';
         divLista.style.display = 'flex';
+        divData.style.display = 'flex';
     }
 
     function exibirNovoComentario() {

@@ -49,12 +49,13 @@
     padding: 10px;
     border: solid 1px var(--mainColor);
     border-radius: 10px;
+    text-justify: newspaper;
 }
 
 #divPost {
     display: none;
     flex-direction: column;
-    width: 80%;
+    width: 94%;
 }
 
 .post h3 {

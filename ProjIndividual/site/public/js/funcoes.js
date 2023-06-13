@@ -8,7 +8,7 @@ function validarSessao(adm) {
 
 function printarHeader() {
     var texto = `
-        <div class="icone">
+        <div class="icone" onclick="window.location = 'index.html';">
         O Violista
         <img src="./img/icon_underline.svg">
         </div>
