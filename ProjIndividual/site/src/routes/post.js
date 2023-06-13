@@ -27,6 +27,10 @@ router.post("/cadastrarCategorias", function (req, res) {
     postController.cadastrarCategorias(req, res);
 });
 
+router.post("/cadastrarVisualizacoes", function (req, res) {
+    postController.cadastrarVisualizacoes(req, res);
+})
+
 router.put("/atualizar", function(req, res) {
     postController.atualizar(req, res);
 });

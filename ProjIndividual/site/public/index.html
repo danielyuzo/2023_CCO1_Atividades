@@ -128,7 +128,7 @@
         for (var i = (pagina - 1) * itensPorPagina; i < listaFiltrada.length && i < pagina * itensPorPagina; i++) {
             divLista.innerHTML += `<div class="post" onclick="selecionarPost(${listaFiltrada[i].idPost})">
                     <h3>${listaFiltrada[i].titulo}</h3>
-                    <p>${listaFiltrada[i].textoPost.slice(0,400)}...</p>
+                    <p>${listaFiltrada[i].textoPost}</p>
                     <span>Criado em: ${listaFiltrada[i].dataCriacao.toDateString()} por ${listaFiltrada[i].username}</span>
                 </div>`;
         }
@@ -267,7 +267,7 @@
 
         divPost.innerHTML = '';
         var texto = `<div class="post">
-                    <h3><span class="botao" onclick="voltar()"><img src="img/nav_left.svg" alt="Voltar"></span>${post.titulo} <div class="visualizacoes">${post.visualizacoes + 1} <img src="img/eye.svg"></div></h3>
+                    <h3><span class="botao" onclick="voltar()"><img src="img/nav_left.svg" alt="Voltar"></span>${post.titulo} <div class="visualizacoes">${++post.quantidade} <img src="img/eye.svg"></div></h3>
 
                     <div id="divShowPost${idPost}" class="mostrarCard">
                         <p id="pPost${idPost}">${post.textoPost}</p>
@@ -342,7 +342,7 @@
             })
         }).then(function (resposta) {
             if (resposta.ok) {
-                // Alterar visualizações
+                
             }
         }).catch(function (erro) {
             console.log(erro);

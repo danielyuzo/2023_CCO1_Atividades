@@ -20,12 +20,6 @@ function listarPorPost(idPost) {
 
 function cadastrar(post, texto, usuario) {
     console.log("ACESSEI O COMENTARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", post, texto, usuario);
-    
-    // var idComentario;
-    // database.executar(`SELECT MAX(idComentario) FROM comentario WHERE fkPost = ${post};`).then(function(resultado) {
-    //     idComentario = json(resultado);
-    // });
-    // console.log(idComentario);
 
     var instrucao = `
         INSERT INTO comentario (fkPost, textoComentario, dataCriacao, dataEdicao, fkUsuario) VALUES (${post}, '${texto}', now(), now(), ${usuario});

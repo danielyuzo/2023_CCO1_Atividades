@@ -26,26 +26,26 @@ function obterDados(req, res) {
     switch (agrupamento) {
         case 'categoria':
             instrucao[0] = 'SELECT cat.nome AS label, ';
-            instrucao[1] = 'FROM post AS p JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria ';
+            instrucao[1] = 'FROM post AS p JOIN visualizacoes AS v ON v.fkPost = p.idPost JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria ';
             instrucao[3] = 'GROUP BY label ';
             break;
 
         case 'post':
             instrucao[0] = 'SELECT p.titulo AS label, ';
-            instrucao[1] = 'FROM post AS p JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria ';
+            instrucao[1] = 'FROM post AS p JOIN visualizacoes AS v ON v.fkPost = p.idPost JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria ';
             instrucao[3] = 'GROUP BY label ';
             break;
 
         case 'mes':
             instrucao[0] = 'SELECT MONTH(p.dataCriacao) AS label, ';
-            instrucao[1] = 'FROM post AS p JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria ';
+            instrucao[1] = 'FROM post AS p JOIN visualizacoes AS v ON v.fkPost = p.idPost JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria ';
             instrucao[3] = 'GROUP BY label ';
             instrucao[4] = 'ORDER BY label ASC';
             break;
 
         case 'semana':
             instrucao[0] = 'SELECT DAYOFWEEK(p.dataCriacao) AS label, ';
-            instrucao[1] = 'FROM post AS p JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria ';
+            instrucao[1] = 'FROM post AS p JOIN visualizacoes AS v ON v.fkPost = p.idPost JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria ';
             instrucao[3] = 'GROUP BY label ';
             instrucao[4] = 'ORDER BY label ASC';
             break;
@@ -57,7 +57,7 @@ function obterDados(req, res) {
 
     switch (metrica) {
         case 'visualizacao':
-            instrucao[0] += 'SUM(p.visualizacoes) AS dado ';
+            instrucao[0] += 'SUM(v.quantidade) AS dado ';
             instrucao[4] ||= 'ORDER BY dado DESC';
             break;
             

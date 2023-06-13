@@ -135,6 +135,32 @@ function cadastrarCategorias(req, res) {
     }
 }
 
+function cadastrarVisualizacoes(req, res) {
+    var idPost = req.body.idPostServer;
+    if (idPost == undefined) {
+        res.status(400).send("Seu idPost está undefined!");
+    } else {
+        
+        // Passe os valores como parâmetro e vá para o arquivo postModel.js
+        postModel.cadastrarVisualizacoes(idPost)
+            .then(
+                function (resultado) {
+                    res.json(resultado);
+                }
+            ).catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log(
+                        "\nHouve um erro ao realizar o cadastro! Erro: ",
+                        erro.sqlMessage
+                    );
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );
+    }
+}
+
+
 function atualizar(req, res) {
     var textoPost = req.body.textoPostServer;
     var idPost = req.body.idPostServer;
@@ -194,6 +220,7 @@ module.exports = {
     // entrar,
     cadastrar,
     cadastrarCategorias,
+    cadastrarVisualizacoes,
     listar,
     listarUltimoPost,
     visualizar,

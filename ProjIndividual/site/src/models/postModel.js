@@ -3,8 +3,8 @@ var database = require("../database/config")
 function listar() {
     console.log("ACESSEI O POST MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar()");
     var instrucao = `
-        SELECT p.idPost, p.titulo, p.textoPost, p.dataCriacao, p.dataEdicao, p.visualizacoes, u.username 
-            FROM post AS p JOIN usuario AS u ON p.fkUsuario = u.idUsuario ORDER BY dataCriacao DESC, idPost DESC;
+        SELECT p.idPost, p.titulo, p.textoPost, p.dataCriacao, p.dataEdicao, v.quantidade, u.username 
+            FROM post AS p JOIN visualizacoes AS v ON v.fkPost = p.idPost JOIN usuario AS u ON p.fkUsuario = u.idUsuario ORDER BY dataCriacao DESC, idPost DESC;
     `;
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);
@@ -19,20 +19,9 @@ function listarUltimoPost(idUsuario) {
 
 function visualizar(idPost) {
     console.log("ACESSEI O POST MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function listar()");
-    // var instrucao = `
-        // SELECT * FROM post JOIN comentario ON fkPost = idPost JOIN usuario ON  WHERE idPost = ${idPost};
-    // `;
-    var instrucao = `UPDATE post SET visualizacoes = visualizacoes + 1 WHERE idPost = ${idPost}`;
-    // database.executar(instrucao).catch((erro) => {
-    //     console.error("Erro ao atualizar visualizações: " + erro);
-    // });
 
-    // var instrucao = `
-    //     SELECT p.idPost, p.titulo, p.textoPost, p.dataCriacao, p.dataEdicao, p.visualizacoes, u.username
-    //     FROM post AS p JOIN usuario AS u ON p.fkUsuario = u.idUsuario 
-    //     WHERE p.idPost = ${idPost};
-    // `;
-    // console.log("Executando a instrução SQL: \n" + instrucao);
+    var instrucao = `UPDATE visualizacoes SET quantidade = quantidade + 1 WHERE fkPost = ${idPost}`;
+
     return database.executar(instrucao);
 }
 
@@ -56,6 +45,11 @@ function cadastrarCategorias(categorias, idPost) {
             instrucao += ',';
         }
     }
+    return database.executar(instrucao);
+}
+
+function cadastrarVisualizacoes(idPost) {
+    var instrucao = `INSERT INTO visualizacoes VALUES (${idPost}, 0);`
     return database.executar(instrucao);
 }
 
@@ -83,6 +77,7 @@ module.exports = {
     // entrar,
     cadastrar,
     cadastrarCategorias,
+    cadastrarVisualizacoes,
     listar,
     listarUltimoPost,
     visualizar,
