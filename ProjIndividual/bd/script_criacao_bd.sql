@@ -80,34 +80,40 @@ INSERT INTO categoriaPost VALUES (1, 1), (1, 5), (2, 2), (2, 4), (2, 5), (3, 3),
 SELECT * FROM usuario;
 select * from post;
 select * from categoriaPost;
-SELECT * FROM post AS p JOIN usuario AS uP ON p.fkUsuario = uP.idUsuario LEFT JOIN comentario AS c ON p.idPost = c.fkPost JOIN usuario AS uC ON c.fkUsuario = uC.idUsuario;
 select * from post;
 select * from categoria;
 select * from comentario;
 
+SELECT p.idPost, p.titulo, p.textoPost, p.dataCriacao, p.dataEdicao, v.quantidade, u.username 
+            FROM post AS p JOIN visualizacoes AS v ON v.fkPost = p.idPost JOIN usuario AS u ON p.fkUsuario = u.idUsuario ORDER BY dataCriacao DESC, idPost DESC;
+
+SELECT * FROM comentario JOIN usuario ON fkUsuario = idUsuario WHERE fkPost = 1 ORDER BY dataCriacao DESC, idComentario DESC;
 
 SELECT * FROM post AS p JOIN categoriaPost AS cp ON p.idPost = cp.fkPost JOIN categoria c ON c.idCategoria = cp.fkCategoria;
-select * from usuario;
 
 -- Visualizações por categoria
-SELECT c.nome, SUM(v.quantidade) AS vis FROM post AS p
-	JOIN visualizacoes AS v ON v.fkPost = p.idPost
-	JOIN categoriaPost AS cp ON p.idPost = cp.fkPost 
-	JOIN categoria c ON c.idCategoria = cp.fkCategoria 
-    GROUP BY c.nome ORDER BY vis DESC;
-    
--- posts mais visualizados
-SELECT p.titulo, v.quantidade FROM post p JOIN visualizacoes v ON v.fkPost = p.idPost ORDER BY v.quantidade DESC;
+SELECT cat.nome AS label, SUM(v.quantidade) AS dado 
+	FROM post AS p JOIN visualizacoes AS v ON v.fkPost = p.idPost 
+    JOIN categoriaPost AS cp ON p.idPost = cp.fkPost 
+    JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria 
+	GROUP BY label 
+    ORDER BY dado DESC;
 
--- posts mais comentados
-SELECT p.titulo, COUNT(c.idComentario) AS coms FROM post p LEFT JOIN comentario c ON p.idPost = c.fkPost GROUP BY p.titulo ORDER BY coms DESC;
-
--- comentários por categoria
-SELECT cat.nome, COUNT(com.idComentario) AS coms FROM post AS p 
-	JOIN categoriaPost AS cp ON p.idPost = cp.fkPost 
-	JOIN categoria cat ON cat.idCategoria = cp.fkCategoria
-    LEFT JOIN comentario com ON com.fkPost = p.idPost
-    GROUP BY cat.nome ORDER BY coms DESC;
+-- visualizações por post no último mês
+SELECT p.titulo AS label,  SUM(v.quantidade) AS dado 
+	FROM post AS p JOIN visualizacoes AS v ON v.fkPost = p.idPost 
+    JOIN categoriaPost AS cp ON p.idPost = cp.fkPost 
+    JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria 
+    WHERE p.dataCriacao >= DATE_SUB(now(), INTERVAL 1 MONTH) 
+	GROUP BY label 
+    ORDER BY dado DESC;
     
--- quantidade de posts e visualizações por mês
-SELECT MONTH(dataCriacao) AS mes, COUNT(idPost) AS posts, SUM(v.quantidade) AS vis FROM post p JOIN visualizacoes v ON p.idPost = v.fkPost GROUP BY mes; 
+-- Meses com mais comentários no último ano
+SELECT MONTH(p.dataCriacao) AS label, COUNT(com.idComentario) AS dado 
+    FROM post AS p JOIN visualizacoes AS v ON v.fkPost = p.idPost 
+    JOIN categoriaPost AS cp ON p.idPost = cp.fkPost 
+    JOIN categoria AS cat ON cat.idCategoria = cp.fkCategoria 
+    LEFT JOIN comentario AS com ON com.fkPost = p.idPost 
+    WHERE p.dataCriacao >= DATE_SUB(now(), INTERVAL 1 YEAR) 
+    GROUP BY label 
+    ORDER BY label ASC;
