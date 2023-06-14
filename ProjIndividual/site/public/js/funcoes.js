@@ -19,14 +19,12 @@ function printarHeader() {
             texto += `<li onclick="window.location = 'post.html'"><a>Criar novo Post</a></li>`;
         }
         texto += `
-                <li onclick="window.location = 'busca.html'"><a>Busca</a></li>
                 <li onclick="window.location = 'dashboard.html'"><a>Dados</a></li>
                 <li onclick="logout()" class="loginButton"><img src="./img/logout.svg" alt="Logout"></li>
             </ul>`;
     } else {
         texto += `
-                <li onclick="window.location = 'cadastro.html'"><a>Cadastro</a></li>
-                <li onclick="window.location = 'busca.html'"><a>Busca</a></li>
+                <li onclick="window.location = 'cadastro.html'"><a>Cadastre-se</a></li>
                 <li onclick="exibirLogin()" class="loginButton"><img src="./img/login.svg" alt="Login"></li>
             </ul>`;
     }

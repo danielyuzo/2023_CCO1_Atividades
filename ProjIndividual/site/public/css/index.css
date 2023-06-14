@@ -83,6 +83,20 @@
     background-color: var(--hoverColor);
 }
 
+.post iframe {
+    margin: auto;
+}
+
+.fonte {
+    font-size: small;
+    font-style: italic;
+}
+
+.fonte a {
+    text-decoration: underline;
+    color: var(--accentColor);
+}
+
 #divNovoComentario {
     display: none;
     border: 1px solid var(--mainColor);
