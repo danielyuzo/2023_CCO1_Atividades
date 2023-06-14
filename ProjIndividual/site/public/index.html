@@ -353,7 +353,6 @@
     }
 
     function voltar() {
-        // atualizarLista();
         divPost.innerHTML = '';
         divPost.style.display = 'none';
         divLista.style.display = 'flex';
@@ -432,6 +431,8 @@
             if (resposta.ok) {
                 var pPost = document.getElementById('pPost' + idPost);
                 pPost.innerHTML = textoPost;
+                var post = listaPosts.find((x) => x.idPost == idPost);
+                post.textoPost = textoPost;
                 esconderEditarPost(idPost);
             } else {
                 console.log("Houve um erro ao tentar atualizar o post!");
@@ -478,6 +479,9 @@
         }).then(function (resposta) {
             console.log("ESTOU NO THEN DO entrar()!")
             if (resposta.ok) {
+                var index = listaPosts.findIndex((x) => x.idPost == postParaApagar);
+                listaPosts.splice(index, 1);
+                exibirListaPosts(1);
                 esconderDelete();
                 voltar();
                 postParaApagar = null;
