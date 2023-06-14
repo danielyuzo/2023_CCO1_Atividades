@@ -133,13 +133,35 @@ a {
 }
 
 .imgRight {
-    width: 150px;
-    float: right;
-    margin: 5px 0xp 5px 20px;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    float: inline-end;
+    margin: 5px 0px 5px 20px;
+    border: 1px solid var(--mainColor);
+    border-radius: 5px;
+    font-size: small;
+    font-style: italic;
+}
+
+.imgRight img {
+    width: 100%;
+    margin-bottom: 5px;
 }
 
 .imgLeft {
-    width: 150px;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
     float: left;
     margin: 5px 20px 5px 0px;
+    border: 1px solid var(--mainColor);
+    border-radius: 5px;
+    font-size: small;
+    font-style: italic;
+}
+
+.imgLeft img {
+    width: 100%;
+    margin-bottom: 5px;
 }
